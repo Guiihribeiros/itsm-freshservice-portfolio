@@ -5,7 +5,7 @@ ferramenta de Service Desk de uma holding do setor financeiro. Este repositório
 como responsável técnico, com nome da empresa, domínios e nomes de terceiros fictícios por confidencialidade — a
 estrutura, as decisões e as configurações são as que de fato implementei.
 
-**[Ver o documento completo (GitHub Pages)](#)** — atualize este link após habilitar o Pages (veja "Como publicar" abaixo).
+**[Ver o documento completo (GitHub Pages)](https://guiihribeiros.github.io/itsm-freshservice-portfolio/)**
 
 ## Escopo do projeto
 
