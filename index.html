@@ -1,0 +1,2080 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Estrutura ITSM FreshService</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root{
+    --bg:#f6f8f7;
+    --surface:#ffffff;
+    --surface-soft:#eef2f0;
+    --border:#dde4e1;
+    --ink:#1a2422;
+    --ink-soft:#54615c;
+    --ink-faint:#8a9691;
+    --accent:#0e6e5b;
+    --accent-ink:#08453a;
+    --accent-soft:#e2f1ec;
+    --accent-soft-border:#bfe0d4;
+    --good:#2f8f5f;
+    --good-soft:#e5f4ec;
+    --warn:#a97114;
+    --warn-soft:#faf0dd;
+    --pend:#8a8f9a;
+    --pend-soft:#eef0f2;
+    --shadow: 0 1px 2px rgba(20,30,27,0.04), 0 8px 24px -12px rgba(20,30,27,0.12);
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#121614;
+      --surface:#181e1c;
+      --surface-soft:#1f2624;
+      --border:#2b3432;
+      --ink:#e9efec;
+      --ink-soft:#a9b6b1;
+      --ink-faint:#6e7975;
+      --accent:#4fc9a6;
+      --accent-ink:#bdeeda;
+      --accent-soft:#1a2f29;
+      --accent-soft-border:#28473d;
+      --good:#57c98d;
+      --good-soft:#173226;
+      --warn:#e3ac4c;
+      --warn-soft:#332a15;
+      --pend:#8d968f;
+      --pend-soft:#242b28;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.45);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#121614;
+    --surface:#181e1c;
+    --surface-soft:#1f2624;
+    --border:#2b3432;
+    --ink:#e9efec;
+    --ink-soft:#a9b6b1;
+    --ink-faint:#6e7975;
+    --accent:#4fc9a6;
+    --accent-ink:#bdeeda;
+    --accent-soft:#1a2f29;
+    --accent-soft-border:#28473d;
+    --good:#57c98d;
+    --good-soft:#173226;
+    --warn:#e3ac4c;
+    --warn-soft:#332a15;
+    --pend:#8d968f;
+    --pend-soft:#242b28;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.45);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+    font-size:16px;
+    line-height:1.6;
+  }
+  h1,h2,h3{
+    font-family:'Source Serif 4', ui-serif, Georgia, serif;
+    text-wrap:balance;
+    color:var(--ink);
+    margin:0;
+  }
+  code, .mono, .num{
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  a{color:var(--accent-ink);}
+
+  .shell{
+    display:grid;
+    grid-template-columns: 250px minmax(0,1fr);
+    max-width:1180px;
+    margin:0 auto;
+  }
+
+  /* ---- Sidebar ---- */
+  nav.toc{
+    position:sticky;
+    top:0;
+    align-self:start;
+    height:100vh;
+    overflow-y:auto;
+    padding:28px 18px 28px 24px;
+    border-right:1px solid var(--border);
+  }
+  .toc-brand{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--ink-faint);
+    margin-bottom:2px;
+  }
+  .toc-title{
+    font-family:'Source Serif 4', serif;
+    font-size:19px;
+    font-weight:600;
+    margin-bottom:22px;
+    line-height:1.25;
+  }
+  .theme-toggle{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    width:100%;
+    margin-bottom:20px;
+    padding:8px 10px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:var(--surface);
+    color:var(--ink-soft);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:13px;
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .theme-toggle:hover{background:var(--surface-soft); color:var(--ink); border-color:var(--accent-soft-border);}
+  .theme-toggle-icon{font-size:14px; line-height:1; flex:none;}
+  .toc-list{list-style:none; margin:0; padding:0;}
+  .toc-list a{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:6px 8px;
+    border-radius:6px;
+    font-size:13.5px;
+    color:var(--ink-soft);
+    text-decoration:none;
+    margin-bottom:1px;
+  }
+  .toc-list a:hover{background:var(--surface-soft); color:var(--ink);}
+  .toc-dot{width:6px; height:6px; border-radius:50%; flex:none; background:var(--pend);}
+  .toc-dot.done{background:var(--good);}
+  .toc-dot.wip{background:var(--warn);}
+
+  /* ---- Main ---- */
+  main{padding:40px 48px 120px; min-width:0;}
+
+  header.hero{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    padding-bottom:28px;
+    margin-bottom:36px;
+    border-bottom:1px solid var(--border);
+  }
+  .eyebrow{
+    font-size:12px;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    color:var(--accent-ink);
+    font-weight:600;
+  }
+  header.hero h1{font-size:34px; font-weight:700;}
+  .hero-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 22px;
+    font-size:13.5px;
+    color:var(--ink-soft);
+  }
+  .hero-meta b{color:var(--ink); font-weight:600;}
+
+  section{margin-bottom:52px; scroll-margin-top:24px;}
+  section > h2{
+    font-size:23px;
+    font-weight:700;
+    margin-bottom:6px;
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+  }
+  .section-sub{color:var(--ink-soft); font-size:14.5px; margin-bottom:20px; max-width:64ch;}
+
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-size:11.5px;
+    font-weight:600;
+    letter-spacing:.02em;
+    padding:3px 9px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .badge.done{background:var(--good-soft); color:var(--good);}
+  .badge.wip{background:var(--warn-soft); color:var(--warn);}
+  .badge.pend{background:var(--pend-soft); color:var(--pend);}
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:22px 24px;
+    box-shadow:var(--shadow);
+  }
+  .card + .card{margin-top:16px;}
+  .card h3{font-size:16px; font-weight:600; margin-bottom:4px;}
+  .card p{margin:6px 0 0; color:var(--ink-soft); font-size:14.5px;}
+
+  .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+
+  table{width:100%; border-collapse:collapse; font-size:14px;}
+  th,td{text-align:left; padding:9px 12px; border-bottom:1px solid var(--border); vertical-align:top;}
+  th{
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:var(--ink-faint);
+    font-weight:600;
+    border-bottom:1px solid var(--border);
+  }
+  tr:last-child td{border-bottom:none;}
+  .table-wrap{overflow-x:auto; border:1px solid var(--border); border-radius:10px;}
+  .table-wrap table{background:var(--surface);}
+
+  .tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    background:var(--surface-soft);
+    border:1px solid var(--border);
+    padding:1px 7px;
+    border-radius:5px;
+    color:var(--ink-soft);
+  }
+  .pill-accent{
+    display:inline-block;
+    background:var(--accent-soft);
+    border:1px solid var(--accent-soft-border);
+    color:var(--accent-ink);
+    font-size:12px;
+    font-weight:600;
+    padding:2px 9px;
+    border-radius:999px;
+  }
+
+  ol.steps{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:14px;}
+  ol.steps li{
+    display:grid;
+    grid-template-columns:30px 1fr;
+    gap:14px;
+  }
+  ol.steps .n{
+    width:30px; height:30px;
+    border-radius:50%;
+    background:var(--accent-soft);
+    color:var(--accent-ink);
+    border:1px solid var(--accent-soft-border);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px; font-weight:600;
+    flex:none;
+  }
+  ol.steps .step-body b{display:block; font-size:14.5px; margin-bottom:2px;}
+  ol.steps .step-body span{color:var(--ink-soft); font-size:13.5px;}
+
+  .callout{
+    display:flex;
+    gap:12px;
+    background:var(--warn-soft);
+    border:1px solid color-mix(in srgb, var(--warn) 35%, transparent);
+    border-radius:10px;
+    padding:14px 16px;
+    font-size:13.5px;
+    color:var(--ink);
+  }
+  .callout b{color:var(--warn);}
+  .callout.accent{background:var(--accent-soft); border-color:var(--accent-soft-border);}
+  .callout.accent b{color:var(--accent-ink);}
+
+  .changelog-item{
+    display:grid;
+    grid-template-columns:92px 1fr;
+    gap:16px;
+    padding:12px 0;
+    border-bottom:1px solid var(--border);
+    font-size:14px;
+  }
+  .changelog-item:last-child{border-bottom:none;}
+  .changelog-item time{color:var(--ink-faint); font-size:12.5px; font-family:'IBM Plex Mono',monospace;}
+
+  .checklist{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;}
+  .checklist li{display:flex; gap:10px; align-items:flex-start; font-size:14.5px;}
+  .checklist .box{
+    width:16px; height:16px; border-radius:4px; border:1.5px solid var(--ink-faint);
+    flex:none; margin-top:2px;
+  }
+
+  .config-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .config-card + .config-card{margin-top:14px;}
+  .config-card header{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:14px 20px;
+    background:var(--surface-soft);
+    border-bottom:1px solid var(--border);
+  }
+  .config-card header h4{margin:0; font-size:15.5px; font-weight:600; font-family:'IBM Plex Sans',sans-serif;}
+  .config-card header .path{font-size:12px; color:var(--ink-faint); font-family:'IBM Plex Mono',monospace;}
+  .field-grid{
+    display:grid;
+    grid-template-columns:200px 1fr;
+    font-size:13.5px;
+  }
+  .field-grid .f-row{display:contents;}
+  .field-grid .f-label{
+    padding:10px 20px;
+    color:var(--ink-faint);
+    border-bottom:1px solid var(--border);
+    border-right:1px solid var(--border);
+    background:var(--surface-soft);
+  }
+  .field-grid .f-value{
+    padding:10px 20px;
+    border-bottom:1px solid var(--border);
+    color:var(--ink);
+  }
+  .field-grid .f-row:last-child .f-label,
+  .field-grid .f-row:last-child .f-value{border-bottom:none;}
+  .f-empty{color:var(--ink-faint); font-style:italic;}
+
+  @media (max-width: 860px){
+    .shell{grid-template-columns:1fr;}
+    nav.toc{position:relative; height:auto; border-right:none; border-bottom:1px solid var(--border);}
+    main{padding:28px 20px 80px;}
+    .grid-2, .grid-3{grid-template-columns:1fr;}
+  }
+</style>
+
+<div class="shell">
+  <nav class="toc">
+    <div class="toc-brand">NovaPay · Vantris Holding</div>
+    <div class="toc-title">ITSM no FreshService</div>
+    <button type="button" class="theme-toggle" id="themeToggle" aria-label="Alternar entre tema claro e escuro">
+      <span class="theme-toggle-icon">🌙</span><span class="theme-toggle-label">Modo escuro</span>
+    </button>
+    <ul class="toc-list">
+      <li><a href="#visao-geral"><span class="toc-dot wip"></span>Visão geral</a></li>
+      <li><a href="#planos"><span class="toc-dot wip"></span>Planos &amp; licenciamento</a></li>
+      <li><a href="#config-realizada"><span class="toc-dot wip"></span>Registro de configuração real</a></li>
+      <li><a href="#service-desk"><span class="toc-dot wip"></span>Service Desk / Incidentes</a></li>
+      <li><a href="#csat"><span class="toc-dot done"></span>Pesquisa de Satisfação (CSAT)</a></li>
+      <li><a href="#catalogo"><span class="toc-dot done"></span>Catálogo de Serviços</a></li>
+      <li><a href="#cmdb"><span class="toc-dot wip"></span>CMDB / Ativos</a></li>
+      <li><a href="#change-problem"><span class="toc-dot wip"></span>Change &amp; Problem</a></li>
+      <li><a href="#migracao"><span class="toc-dot wip"></span>Migração do TOPdesk</a></li>
+      <li><a href="#metricas"><span class="toc-dot wip"></span>Métricas a preservar</a></li>
+      <li><a href="#proximos-passos"><span class="toc-dot pend"></span>Próximos passos</a></li>
+      <li><a href="#log"><span class="toc-dot done"></span>Log de decisões</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <div class="eyebrow">Estudo de caso de portfólio</div>
+      <h1>Estrutura ITSM no FreshService</h1>
+      <div class="hero-meta">
+        <span><b>Empresa</b> NovaPay / Vantris Holding Patrimonial SA</span>
+        <span><b>Responsável</b> Guilherme Silva</span>
+        <span><b>Início</b> 09/09/2026</span>
+        <span><b>Substitui</b> TOPdesk</span>
+        <span><b>Status geral</b> Ambiente trial ativo · estrutura em definição</span>
+      </div>
+    </header>
+
+    <div class="callout accent" style="margin:-14px 0 36px;">
+      <span>ⓘ</span>
+      <span><b>Sobre este material:</b> este documento reproduz, com nome de empresa, domínios e nomes de colegas
+      fictícios, um projeto real de implementação de ITSM que conduzi do zero na plataforma Freshservice. Todas as
+      decisões técnicas, descobertas, telas, campos e configurações abaixo refletem o trabalho de fato realizado;
+      apenas os identificadores da empresa e de terceiros foram substituídos por dados fictícios, por
+      confidencialidade.</span>
+    </div>
+
+    <section id="visao-geral">
+      <h2>Visão geral <span class="badge wip">Em andamento</span></h2>
+      <p class="section-sub">O que este projeto é e onde ele para.</p>
+      <div class="card">
+        <p style="margin-top:0; color:var(--ink); font-size:14.5px;">
+          Montar do zero um ambiente de ITSM na plataforma FreshService, substituindo integralmente o TOPdesk,
+          cobrindo quatro módulos: <b>Service Desk / Incidentes</b>, <b>Catálogo de Serviços</b>,
+          <b>CMDB / Gestão de Ativos</b> e <b>Change &amp; Problem Management</b>. Este documento é a fonte única
+          de verdade do projeto (decisões, estrutura definida e plano de migração) e é atualizado a cada
+          sessão de trabalho.
+        </p>
+        <div class="grid-3" style="margin-top:18px;">
+          <div>
+            <div class="tag">Instância</div>
+            <p style="margin-top:6px;">Trial "experimente grátis" recém-aberto (edição Enterprise por 14 dias, conforme a Freshworks).</p>
+          </div>
+          <div>
+            <div class="tag">Escopo do time</div>
+            <p style="margin-top:6px;">Service Desk gerenciado por Guilherme, hoje operando no TOPdesk.</p>
+          </div>
+          <div>
+            <div class="tag">Corte planejado</div>
+            <p style="margin-top:6px;">Substituição total: TOPdesk será desativado ao final da migração.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="planos">
+      <h2>Planos &amp; licenciamento <span class="badge pend">Decisão pendente</span></h2>
+      <p class="section-sub">O plano define quais dos 4 módulos continuam disponíveis depois que o trial acabar.</p>
+
+      <div class="callout">
+        <span>⚠</span>
+        <span><b>Ponto crítico:</b> o trial atual roda na edição Enterprise, então os quatro módulos aparecem
+        disponíveis agora, inclusive Change e Problem Management. Mas nos planos pagos, <b>Change Management</b>
+        e <b>Problem Management</b> só existem a partir do plano <b>Pro</b> para cima. Sem decidir o plano definitivo
+        antes do fim do trial, esses dois módulos somem do ambiente.</span>
+      </div>
+
+      <div class="table-wrap" style="margin-top:18px;">
+        <table>
+          <tr><th>Plano</th><th>Service Desk</th><th>Catálogo de Serviços</th><th>CMDB / Ativos</th><th>Change &amp; Problem</th></tr>
+          <tr><td><b>Starter</b></td><td>✓</td><td>N/A</td><td>Limitado (100 unidades)</td><td>N/A</td></tr>
+          <tr><td><b>Growth</b></td><td>✓</td><td>✓</td><td>Limitado (100 unidades)</td><td>N/A</td></tr>
+          <tr><td><b>Pro</b></td><td>✓</td><td>✓</td><td>Limitado (100 unidades)</td><td>✓</td></tr>
+          <tr><td><b>Enterprise</b></td><td>✓</td><td>✓</td><td>Limitado (100 unidades, ampliável)</td><td>✓</td></tr>
+        </table>
+      </div>
+      <p style="font-size:12.5px; color:var(--ink-faint); margin-top:8px;">
+        Valores de referência publicados pela Freshworks (freshworks.com/freshservice/pricing), sujeitos a alteração e a condições comerciais/negociação.
+        Unidades de ativos além do incluído são add-on pago em qualquer plano.
+      </p>
+
+      <div class="callout" style="margin-top:16px;">
+        <span>⚠</span>
+        <span><b>Prazo do trial estendido até 29/09/2026</b> (venceria em 23/09/2026, prorrogado). Como os quatro
+        módulos foram definidos como prioridade, o plano mínimo viável é o <b>Pro</b>. Ainda não há confirmação de
+        que a decisão de plano foi tomada — decidir antes de 29/09/2026, para não perder o trabalho de configuração
+        de Change/Problem feito durante o trial.</span>
+      </div>
+
+      <h3 style="font-size:15px; margin:22px 0 10px;">Detalhes de licenciamento: reunião com a Prisma Consultoria (parceira Freshworks) <span class="tag">17/09/2026 · apenas notas, nenhuma configuração alterada</span></h3>
+      <p class="section-sub">
+        Reunião foi uma <b>apresentação geral da plataforma</b> feita pela Prisma Consultoria (empresa parceira da Freshworks);
+        nada foi alterado no ambiente durante ou por causa dela. As informações abaixo são só o que foi dito na
+        demonstração, para referência.
+      </p>
+      <div class="config-card">
+        <header><h4>Notas da demonstração (informativo, nada configurado)</h4><span class="path">reunião com Rafael Costa (Prisma Consultoria)</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Licença Business x TI</div><div class="f-value">A licença Business tem escopo mais limitado; a licença de TI é a que cobre os recursos ITIL demonstrados (a que interessa para o nosso caso).</div></div>
+          <div class="f-row"><div class="f-label">Aprovadores</div><div class="f-value">Usuários que só aprovam/rejeitam mudanças (por e-mail, Teams ou portal) <b>não precisam de licença</b>. Só precisa de licença quem edita informações ou executa ações dentro do chamado.</div></div>
+          <div class="f-row"><div class="f-label">IA (Fred / agente de IA)</div><div class="f-value">Gratuita atualmente; a Prisma Consultoria informou que passa a ser <b>tokenizada (cobrada por uso) a partir de janeiro</b> de 2027.</div></div>
+          <div class="f-row"><div class="f-label">Descoberta avançada de ativos</div><div class="f-value">É cobrada separadamente, por unidades de ativos: a conversão varia conforme o tipo de ativo, e o valor exato só é calculado depois de um levantamento do ambiente do cliente.</div></div>
+        </div>
+      </div>
+      <p class="section-sub" style="margin-top:10px;">
+        Essas informações alimentam a decisão pendente de plano (Pro x Enterprise) e o dimensionamento de
+        licenças; ver <a href="#proximos-passos">Próximos passos</a>.
+      </p>
+
+      <h3 style="font-size:15px; margin:26px 0 10px;">Modelo de suporte da plataforma <span class="badge done">Definido</span></h3>
+      <p class="section-sub">
+        Definição pedida pela Bianca Torres, em resposta à apresentação da Camila Duarte sobre os canais de suporte do
+        Freshservice, para validar se o suporte oficial da plataforma é suficiente ou se seria necessário
+        contratar um parceiro adicional desde já.
+      </p>
+      <div class="config-card">
+        <header><h4>Suporte inicial via canais oficiais da Freshworks</h4><span class="path">decisão de 21/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Escopo desta decisão</div><div class="f-value">Suporte sobre a própria plataforma (dúvidas, incidentes e configuração do Freshservice) para quem administra o ambiente. O atendimento aos colaboradores da Vantris/NovaPay é uma frente separada, feita internamente por Guilherme e pelos demais analistas (ver <a href="#service-desk">Service Desk / Gestão de Incidentes</a>).</div></div>
+          <div class="f-row"><div class="f-label">Decisão</div><div class="f-value">Iniciar com o suporte oficial da plataforma, pelos canais já indicados pela Freshworks/Camila Duarte: chat dentro da ferramenta (24/7), e-mail para support@freshservice.com, página de status (status.freshworks.com) e sessões de consultoria de produto 1:1 sem custo adicional. Sem necessidade de contratar um parceiro adicional por enquanto.</div></div>
+          <div class="f-row"><div class="f-label">Fluxo interno de acionamento</div><div class="f-value">Toda dúvida ou incidente inicial relacionado à ferramenta é formalizada pelo canal definido e passa por validação interna, com Guilherme fazendo a primeira análise. Se não for possível resolver internamente, aciona-se o suporte oficial da Freshworks pelos canais acima.</div></div>
+          <div class="f-row"><div class="f-label">Parceiro (Prisma Consultoria ou outro) como opção futura</div><div class="f-value">Reservado para cenários de maior complexidade: automações, integrações ou customizações avançadas. Esse tipo de solicitação passa primeiro por validação interna e só depois, se confirmada a necessidade, segue para o acionamento de um parceiro autorizado. Nenhum parceiro contratado até o momento.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="config-realizada">
+      <h2>Registro de Configuração Realizada no FreshService <span class="badge wip">Em andamento</span></h2>
+      <p class="section-sub">
+        Registro técnico, campo a campo, de tudo que já foi criado direto no ambiente (não é proposta: é o que
+        está salvo hoje em <span class="tag">novapay-service.freshservice.com</span>, endereço trocado em
+        18/09/2026, ver <a href="#config-realizada">Troca de subdomínio</a>). Serve para qualquer pessoa
+        auditar ou replicar a configuração depois. Cresce a cada sessão de configuração.
+      </p>
+
+      <h3 style="font-size:15px; margin-bottom:10px;">Horário Comercial <span class="tag">Admin → Service Management → Service Desk Settings → Business Hours</span></h3>
+      <div class="config-card">
+        <header><h4>Default</h4><span class="path">editado em 09/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Descrição</div><div class="f-value">Default Business Calendar</div></div>
+          <div class="f-row"><div class="f-label">Dias/horário</div><div class="f-value">Segunda a Sexta, <b>9:00 às 18:00</b> (9h/dia) · Sábado e Domingo: <b>Off</b></div></div>
+          <div class="f-row"><div class="f-label">Fuso horário</div><div class="f-value">(GMT-03:00) <b>Brasília</b>, corrigido nesta sessão; a conta vinha com "Eastern Time (US &amp; Canada)" por padrão do trial (campo em Admin → Service Desk Settings → Time zone, não fica na tela de Business Hours)</div></div>
+          <div class="f-row"><div class="f-label">Lista de feriados</div><div class="f-value">Importada via botão "Import Holidays" → preset <b>"Holidays in Brazil"</b> (~19 datas: Ano Novo, semana de Carnaval, Sexta-feira Santa, Páscoa, Tiradentes, Dia do Trabalho, Dia das Mães, Corpus Christi, Dia dos Namorados, Dia dos Pais, Independência, N. Sra. Aparecida/Dia das Crianças, Dia do Professor, Dia do Servidor Público, Finados, Proclamação da República, Consciência Negra, Véspera de Natal, Natal, Véspera de Ano Novo). Os 9 feriados dos EUA que vinham por padrão no calendário do trial (New Year's Day, Aniversário de MLK, Aniversário de Washington, Memorial Day, Independence Day, Labor Day, Columbus Day, Veterans Day, Thanksgiving) foram removidos um a um.</div></div>
+          <div class="f-row"><div class="f-label">Datas customizadas (emendas/recessos)</div><div class="f-value">Suportado: o mesmo campo "Enter the name of the holiday" + data + botão "Add" da lista de feriados aceita qualquer nome/data. Um recesso de vários dias corridos = uma entrada por dia. Nenhuma adicionada ainda; pendente de datas específicas a definir com a gestão.</div></div>
+          <div class="f-row"><div class="f-label">Notificações administrativas da conta</div><div class="f-value">Campo obrigatório "Select the account admins to whom important notifications should be sent" preenchido com <b>Guilherme Silva</b> (bloqueava o salvamento do Service Desk Settings até ser definido)</div></div>
+        </div>
+      </div>
+      <p class="section-sub" style="margin-top:10px;">
+        Este calendário é o padrão da conta: qualquer grupo sem um Business Hours próprio configurado (todos os
+        grupos abaixo, por enquanto) herda este horário e esta lista de feriados para cálculo de SLA.
+      </p>
+
+      <h3 style="font-size:15px; margin:26px 0 10px;">Grupos operadores <span class="tag">Admin → User Management → Agent Groups</span></h3>
+      <p class="section-sub">
+        Os 14 grupos de exemplo do template do FreshService (Capacity Management Team, Change Team, Database Team,
+        Hardware Team, Helpdesk Monitoring Team, Incident Team, Major Incident Team, Network Team, Problem
+        Management Team, Release Team, Service Design Team, Service Request Fulfillment Team, Software Team,
+        Supplier Management Team) foram revisados nesta sessão: nenhum tinha horário comercial próprio, agentes
+        cadastrados, grupo restrito ativado ou automação de escalonamento configurada: apenas nome e descrição
+        genéricos do template. Sem nenhuma configuração singular a preservar, todos os 14 foram excluídos. A conta
+        ficou com 5 grupos operadores, todos criados/mantidos pela Vantris: N1, N2, N3, Ouvidoria e Segurança.
+      </p>
+
+      <div class="config-card">
+        <header><h4>N1</h4><span class="path">criado em 09/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Descrição</div><div class="f-value">Primeiro nível de atendimento: Contas e Acessos, Microsoft 365, Equipamentos, Periféricos e Rede básica.</div></div>
+          <div class="f-row"><div class="f-label">Horário comercial</div><div class="f-value">Nenhum próprio: usa o padrão da conta (<a href="#config-realizada">calendário "Default"</a>: Seg-Sex 9h-18h, fuso Brasília)</div></div>
+          <div class="f-row"><div class="f-label">Função de negócio</div><div class="f-value">TI (aparece como "ISTO" na tela, por um bug de tradução do FreshService para "IT")</div></div>
+          <div class="f-row"><div class="f-label">Grupo restrito</div><div class="f-value">Não: qualquer agente pode ver os tickets do grupo</div></div>
+          <div class="f-row"><div class="f-label">Agentes</div><div class="f-value f-empty">nenhum adicionado ainda</div></div>
+          <div class="f-row"><div class="f-label">Automação de grupo</div><div class="f-value f-empty">escalonamento por e-mail não configurado</div></div>
+        </div>
+      </div>
+      <div class="config-card">
+        <header><h4>N2</h4><span class="path">criado em 09/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Descrição</div><div class="f-value">Segundo nível: acesso administrativo, Azure AD, Rede e Infraestrutura, certificados digitais.</div></div>
+          <div class="f-row"><div class="f-label">Horário comercial</div><div class="f-value">Nenhum próprio: usa o padrão da conta (<a href="#config-realizada">calendário "Default"</a>: Seg-Sex 9h-18h, fuso Brasília)</div></div>
+          <div class="f-row"><div class="f-label">Função de negócio</div><div class="f-value">TI ("ISTO" na tela)</div></div>
+          <div class="f-row"><div class="f-label">Grupo restrito</div><div class="f-value">Não</div></div>
+          <div class="f-row"><div class="f-label">Agentes</div><div class="f-value f-empty">nenhum adicionado ainda</div></div>
+          <div class="f-row"><div class="f-label">Automação de grupo</div><div class="f-value f-empty">escalonamento por e-mail não configurado</div></div>
+        </div>
+      </div>
+      <div class="config-card">
+        <header><h4>N3</h4><span class="path">criado em 09/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Descrição</div><div class="f-value">Terceiro nível: escalonamento especializado, casos complexos não resolvidos por N1/N2.</div></div>
+          <div class="f-row"><div class="f-label">Horário comercial</div><div class="f-value">Nenhum próprio: usa o padrão da conta (<a href="#config-realizada">calendário "Default"</a>: Seg-Sex 9h-18h, fuso Brasília)</div></div>
+          <div class="f-row"><div class="f-label">Função de negócio</div><div class="f-value">TI ("ISTO" na tela)</div></div>
+          <div class="f-row"><div class="f-label">Grupo restrito</div><div class="f-value">Não</div></div>
+          <div class="f-row"><div class="f-label">Agentes</div><div class="f-value f-empty">nenhum adicionado ainda</div></div>
+          <div class="f-row"><div class="f-label">Automação de grupo</div><div class="f-value f-empty">escalonamento por e-mail não configurado</div></div>
+        </div>
+      </div>
+      <div class="config-card">
+        <header><h4>Ouvidoria</h4><span class="path">criado em 09/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Descrição</div><div class="f-value">Canal de ouvidoria: reclamações, denúncias, sugestões e feedback de clientes e colaboradores.</div></div>
+          <div class="f-row"><div class="f-label">Horário comercial</div><div class="f-value">Nenhum próprio: usa o padrão da conta (<a href="#config-realizada">calendário "Default"</a>: Seg-Sex 9h-18h, fuso Brasília)</div></div>
+          <div class="f-row"><div class="f-label">Função de negócio</div><div class="f-value">Legal</div></div>
+          <div class="f-row"><div class="f-label">Grupo restrito</div><div class="f-value">Não</div></div>
+          <div class="f-row"><div class="f-label">Agentes</div><div class="f-value f-empty">nenhum adicionado ainda</div></div>
+          <div class="f-row"><div class="f-label">Automação de grupo</div><div class="f-value f-empty">escalonamento por e-mail não configurado</div></div>
+        </div>
+      </div>
+      <div class="config-card">
+        <header><h4>Segurança</h4><span class="path">criado em 09/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Descrição</div><div class="f-value">Phishing, incidentes de segurança, perda/roubo de equipamento, resposta a atividade suspeita.</div></div>
+          <div class="f-row"><div class="f-label">Horário comercial</div><div class="f-value">Nenhum próprio: usa o padrão da conta (<a href="#config-realizada">calendário "Default"</a>: Seg-Sex 9h-18h, fuso Brasília)</div></div>
+          <div class="f-row"><div class="f-label">Função de negócio</div><div class="f-value">TI ("ISTO" na tela)</div></div>
+          <div class="f-row"><div class="f-label">Grupo restrito</div><div class="f-value">Não</div></div>
+          <div class="f-row"><div class="f-label">Agentes</div><div class="f-value f-empty">nenhum adicionado ainda</div></div>
+          <div class="f-row"><div class="f-label">Automação de grupo</div><div class="f-value f-empty">escalonamento por e-mail não configurado</div></div>
+        </div>
+      </div>
+
+      <p class="section-sub" style="margin-top:14px;">
+        Pendências conscientes: nenhum agente (pessoa) foi adicionado a nenhum grupo ainda, e o grupo de Facilities
+        não foi criado (decisão de 09/09). O horário comercial de todos os 5 grupos vem do calendário "Default" da
+        conta; nenhum tem calendário próprio configurado ainda.
+      </p>
+
+      <h3 style="font-size:15px; margin:26px 0 10px;">Categoria / Subcategoria (campo de ticket) <span class="tag">Admin → Service Management → Service Desk Settings → Field Manager → Ticket Fields → campo "Category" → Manage Category</span></h3>
+      <p class="section-sub">
+        Campo compartilhado (Shared Field) entre os formulários de Ticket, Problem, Change e Release: dropdown
+        dependente de 2 níveis (Nível-1 = Categoria, Nível-2 = Subcategoria; o Nível-3 do FreshService não foi
+        usado, pois o catálogo real tem só 2 níveis). Populado manualmente, categoria por categoria, pelos campos
+        padrão "Adicionar uma opção" do Nível 1 e do Nível 2. A ferramenta "Adicionar/Editar opções em massa"
+        (bulk edit, um único texto com indentação por Tab) foi testada primeiro e descartada: ao renomear os
+        Nível-1 em massa, as subcategorias filhas continuavam associadas (por posição, não por nome) às
+        categorias antigas do template, misturando os dados (ex.: "Contas e Acessos" herdava os filhos de
+        "Hardware"). Como o problema se repetiu de forma consistente em dois testes, o método manual foi adotado
+        para garantir a integridade da associação categoria↔subcategoria.
+      </p>
+      <div class="config-card">
+        <header><h4>11 categorias / 34 subcategorias, que espelham o Catálogo de Serviços</h4><span class="path">configurado em 09/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Nível 1 (Categoria)</div><div class="f-value">Contas e Acessos · Microsoft 365 e Colaboração · Equipamentos e Hardware · Periféricos e Impressão · Rede e Infraestrutura · Software e Licenciamento · Segurança da Informação · Suporte Geral de TI · Administrativo e Facilities · Fora de Escopo · Gestão da plataforma de Service Desk (11 categorias, mesmos nomes e ordem do <a href="#catalogo">Catálogo de Serviços</a>).</div></div>
+          <div class="f-row"><div class="f-label">Nível 2 (Subcategoria)</div><div class="f-value">34 subcategorias no total, idênticas às linhas do catálogo (8 + 6 + 5 + 2 + 2 + 3 + 2 + 3 + 3 = 34). "Fora de Escopo" e "Gestão da plataforma de Service Desk" ficaram sem subcategoria (decisão confirmada em 09/09): categoria própria de Nível 1, sem filho de Nível 2.</div></div>
+          <div class="f-row"><div class="f-label">Categorias antigas do template</div><div class="f-value">As 23 categorias de exemplo da conta trial (Hardware, Software, Network, Other, Office Applications, Office Furniture, Office Equipment, Employee Benefits, Employee Records and Documents, Employee Onboarding/Offboarding, Talent Management, Employee Relations, Workplace Access and Security, Travel, Building and Grounds Maintenance, Legal Document Creation, Legal Review - Vendor Documents, Legal Review - Customer Documents, Vendor Document Review, Payroll, Vendor Payment, Customer Payment, Reimbursements and Advances) foram excluídas. Confirmado após o Salvar, reabrindo "Manage Category": restaram só as 11 novas.</div></div>
+          <div class="f-row"><div class="f-label">Verificação</div><div class="f-value">As 9 categorias com subcategoria foram conferidas uma a uma no modo "Pré-visualização" (o dropdown dependente real, como o usuário final vê) antes de excluir as categorias antigas; todas bateram exatamente com o catálogo, na ordem certa.</div></div>
+        </div>
+      </div>
+      <p class="section-sub" style="margin-top:10px;">
+        Pendente: vincular o "Grupo operador" de cada subcategoria (coluna do <a href="#catalogo">Catálogo de
+        Serviços</a>) a uma regra de atribuição automática (Business Rules / Workflow Automator) e configurar as
+        políticas de SLA por categoria, os próximos passos da sequência combinada (Categorias → Matriz de
+        Prioridade → SLA).
+      </p>
+
+      <h3 style="font-size:15px; margin:26px 0 10px;">Campos de ticket: Grupo, Agente, Departamento, Prioridade e Incidente Grave <span class="tag">Admin → Service Management → Service Desk Settings → Field Manager → Campos de tickets</span></h3>
+      <p class="section-sub">
+        Continuação da configuração do Field Manager além de Categoria: os 4 campos predefinidos do formulário e a
+        seção condicional que só aparece quando o Tipo do ticket é "Incidente Grave". Nos campos predefinidos
+        (Grupo, Agente, Departamento, Prioridade) o rótulo usado pelo agente é fixo/travado pelo Freshservice; só o
+        rótulo exibido ao solicitante no portal pode ser editado. Nos campos da seção Incidente Grave (campos
+        personalizados, criados pelo próprio template do Freshservice) os dois rótulos são editáveis.
+      </p>
+      <div class="config-card">
+        <header><h4>Grupo, Agente, Departamento, Prioridade</h4><span class="path">alterado em 18/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Grupo</div><div class="f-value">Rótulo no portal: <span class="mono">Group</span> → <span class="mono">Grupo</span>. Comportamento: marcado <b>"Obrigatório ao fechar o ticket"</b> (antes não era exigido), o que garante que nenhum ticket seja fechado sem um grupo definido, mesmo que um agente limpe o valor herdado da atribuição automática ao N1.</div></div>
+          <div class="f-row"><div class="f-label">Agente</div><div class="f-value">Rótulo no portal: <span class="mono">Assigned to</span> → <span class="mono">Atribuído a</span>. Comportamento inalterado (já vinha visível ao solicitante e mostrado ao aprovador, sem exigir preenchimento do agente).</div></div>
+          <div class="f-row"><div class="f-label">Departamento</div><div class="f-value">Rótulo no portal: <span class="mono">Department</span> → <span class="mono">Departamento</span>. Comportamento inalterado (não obrigatório, não visível ao solicitante).</div></div>
+          <div class="f-row"><div class="f-label">Prioridade</div><div class="f-value">Rótulo no portal: <span class="mono">Priority</span> → <span class="mono">Prioridade</span>. Comportamento inalterado: já vinha marcado como <b>"Obrigatório ao enviar o formulário"</b> por padrão do Freshservice.</div></div>
+        </div>
+      </div>
+      <div class="config-card">
+        <header><h4>Seção "Incidente Grave" (visível apenas quando Tipo = Incidente Grave)</h4><span class="path">alterado em 18/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Tipo de incidente grave</div><div class="f-value">Antes: <span class="mono">Major incident type</span>, com as opções <span class="mono">Full outage / Partial outage / Performance degradation</span>. Depois: rótulo <b>"Tipo de incidente grave"</b>, opções traduzidas para <b>Interrupção total / Interrupção parcial / Degradação de performance</b>. Marcado <b>"Obrigatório ao enviar o formulário"</b>.</div></div>
+          <div class="f-row"><div class="f-label">Impacto no negócio</div><div class="f-value">Antes: <span class="mono">Business impact</span>. Agora obrigatório ao enviar o formulário.</div></div>
+          <div class="f-row"><div class="f-label">Locais afetados</div><div class="f-value">Antes: <span class="mono">Impacted locations</span>. Agora obrigatório ao enviar o formulário.</div></div>
+          <div class="f-row"><div class="f-label">Número de usuários impactados</div><div class="f-value">Antes: <span class="mono">No. of customers impacted</span>. Agora obrigatório ao enviar o formulário.</div></div>
+          <div class="f-row"><div class="f-label">Efeito prático</div><div class="f-value f-empty">A partir de agora, um agente não consegue enviar um ticket do tipo Incidente Grave sem preencher os 4 campos, o que força o registro completo de tipo, impacto no negócio, locais afetados e número de usuários impactados logo na abertura do incidente.</div></div>
+        </div>
+      </div>
+      <p class="section-sub" style="margin-top:10px;">
+        Confirmado após recarregar a página "Campos de tickets" e reabrir cada campo individualmente: todos os
+        rótulos, opções e marcações de obrigatoriedade acima bateram com o que foi salvo.
+      </p>
+
+      <h3 style="font-size:15px; margin:26px 0 10px;">Matriz de Prioridade <span class="tag">Admin → Service Management → Service Desk Settings → Priority Matrix</span></h3>
+      <p class="section-sub">
+        Calcula automaticamente a <b>Prioridade</b> (Crítico/Alto/Médio/Baixo) de um chamado a partir de dois campos
+        que o agente preenche: <b>Impacto</b> (quantas pessoas/áreas afetadas) e <b>Urgência</b> (quão rápido
+        precisa ser resolvido). Existe em paralelo ao SLA por categoria do catálogo; os dois servem a situações
+        diferentes, ver explicação na seção <a href="#service-desk">Service Desk / Gestão de Incidentes</a>.
+      </p>
+      <div class="config-card">
+        <header><h4>Matriz nativa do FreshService, mantida sem alterações</h4><span class="path">revisado em 09/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Enable Priority Matrix</div><div class="f-value">Já vinha <b>ativado</b> por padrão na conta trial; nenhuma ação necessária.</div></div>
+          <div class="f-row"><div class="f-label">Valores (Impacto × Urgência)</div><div class="f-value">Matriz padrão do FreshService, não alterada: ver tabela completa em <a href="#service-desk">Service Desk / Gestão de Incidentes</a>. Ao comparar com a proposta anterior deste documento, havia 2 células divergentes (Impacto Alto + Urgência Baixa, e Impacto Médio + Urgência Baixa); decisão de 09/09: manter o padrão nativo do FreshService em vez de ajustar.</div></div>
+          <div class="f-row"><div class="f-label">Preenchimento de Impacto/Urgência</div><div class="f-value">Decisão de 09/09: <b>manual</b>, como vem por padrão: cada agente escolhe os dois campos por chamado. Não foi criada nenhuma regra de preenchimento automático por enquanto.</div></div>
+          <div class="f-row"><div class="f-label">Melhoria futura possível</div><div class="f-value f-empty">Observação: dá para automatizar isso depois com uma Business Rule / Workflow Automator que preenche Impacto e Urgência sozinho com base na Categoria escolhida (ex.: "Criação de usuário" sempre entra como Baixo/Baixo automaticamente), deixando o preenchimento manual só para os itens que realmente variam de gravidade caso a caso (quedas de link, problemas de rede, phishing etc.). Não implementado ainda.</div></div>
+        </div>
+      </div>
+
+      <h3 style="font-size:15px; margin:26px 0 10px;">Políticas de SLA <span class="tag">Admin → Service Management → Service Desk Settings → SLA and OLA Policies</span></h3>
+      <p class="section-sub">
+        As 34 subcategorias do <a href="#catalogo">Catálogo de Serviços</a> têm prazos individuais, mas o FreshService
+        não permite condicionar uma política de SLA a "cada subcategoria com o seu próprio prazo" de forma prática;
+        o caminho adotado foi <b>agrupar as subcategorias por prazo de atendimento compartilhado</b> (2h / 4h / 1 dia /
+        2 dias / 3 dias, os 5 valores que aparecem na coluna SLA da planilha), criando uma política de SLA por grupo.
+        Isso resulta em 5 políticas condicionadas por Sub-Categoria + 1 política <b>Default</b> que funciona como
+        catch-all por Prioridade (Impacto × Urgência), usada para <b>Incidentes</b> (que não têm SLA fixo de
+        catálogo, ver <a href="#service-desk">Service Desk / Gestão de Incidentes</a>) e para qualquer ticket que não
+        se enquadre em nenhuma das 5 políticas de Sub-Categoria. As políticas são avaliadas nessa ordem (as 5
+        condicionadas primeiro, Default por último), ordem controlada pela lista em "SLA and OLA Policies", com o
+        botão "Reorder".
+      </p>
+
+      <div class="callout" style="margin-bottom:14px;">
+        <span>⚠</span>
+        <span><b>Discrepância assumida conscientemente:</b> a subcategoria "Gestão da plataforma de Service Desk" do
+        catálogo (prazo de catálogo: 2 dias) é uma <b>Categoria sem Subcategoria</b> no campo Category do FreshService
+        (ver <a href="#config-realizada">Categoria/Subcategoria</a>); por isso não existe um valor de
+        "Sub-Category" para ela e nenhuma das 5 políticas condicionadas consegue capturá-la. Na prática, tickets
+        dessa categoria caem na política <b>Default</b> e recebem o SLA por Prioridade em vez do prazo fixo de 2
+        dias do catálogo. Decisão tomada nesta sessão para destravar a configuração; ajustar depois, se necessário, para outro
+        tratamento (ex.: transformar em subcategoria de outra categoria, ou criar uma 6ª política só para ela).</span>
+      </div>
+
+      <div class="config-card">
+        <header><h4>1 · SR - 2 horas (Reset de senha, MFA, Segurança)</h4><span class="path">criada em 09/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Descrição</div><div class="f-value">Reset de senha, Problemas com login/MFA, Suspeita de phishing e Perda/roubo de equipamento: prazo de 2h da planilha do Catálogo de Serviços.</div></div>
+          <div class="f-row"><div class="f-label">SLA Targets</div><div class="f-value">Todas as 4 prioridades (Urgente/Alto/Médio/Baixo): <b>Responder em 30 Mins · Resolver em 2 Hrs</b></div></div>
+          <div class="f-row"><div class="f-label">Horário operacional</div><div class="f-value">Business Hours (calendário "Default" da conta)</div></div>
+          <div class="f-row"><div class="f-label">E-mail de escalonamento</div><div class="f-value">Ativado (toggle ligado), mas nenhuma regra de escalonamento adicional configurada ("Add rule" / "Add level 1 rule" vazios)</div></div>
+          <div class="f-row"><div class="f-label">Aplicar a (condições)</div><div class="f-value">Match <b>ALL</b>: Ticket Fields.Type <i>includes</i> Service Request <b>E</b> Ticket Fields.Sub-Category <i>includes</i> [Reset de senha · Problemas com login ou MFA · Suspeita de phishing ou incidente de segurança · Perda/roubo de equipamento]</div></div>
+        </div>
+      </div>
+      <div class="config-card">
+        <header><h4>2 · SR - 4 horas (Rede e Infraestrutura)</h4><span class="path">criada em 09/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Descrição</div><div class="f-value">Links de internet e Wi-Fi corporativo: prazo de 4h da planilha do Catálogo de Serviços.</div></div>
+          <div class="f-row"><div class="f-label">SLA Targets</div><div class="f-value">Todas as 4 prioridades: <b>Responder em 1 Hr · Resolver em 4 Hrs</b></div></div>
+          <div class="f-row"><div class="f-label">Horário operacional</div><div class="f-value">Business Hours (calendário "Default" da conta)</div></div>
+          <div class="f-row"><div class="f-label">E-mail de escalonamento</div><div class="f-value">Ativado, sem regra de escalonamento adicional</div></div>
+          <div class="f-row"><div class="f-label">Aplicar a (condições)</div><div class="f-value">Match <b>ALL</b>: Type <i>includes</i> Service Request <b>E</b> Sub-Category <i>includes</i> [Links de internet · Wi-Fi corporativo]</div></div>
+        </div>
+      </div>
+      <div class="config-card">
+        <header><h4>3 · SR - 1 dia (Hardware, Acessos, Periféricos, Facilities)</h4><span class="path">criada em 09/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Descrição</div><div class="f-value">Acesso administrativo elevado, VPN e acesso remoto, Problemas de Hardware, Lentidão/Performance, Celular corporativo, Periféricos, Impressoras, Certificado digital, Organização de sala de reunião, Organização de estação de trabalho, Limpeza preventiva de equipamento: prazo de 1 dia da planilha do Catálogo de Serviços.</div></div>
+          <div class="f-row"><div class="f-label">SLA Targets</div><div class="f-value">Todas as 4 prioridades: <b>Responder em 2 Hrs · Resolver em 1 Day</b></div></div>
+          <div class="f-row"><div class="f-label">Horário operacional</div><div class="f-value">Business Hours (calendário "Default" da conta)</div></div>
+          <div class="f-row"><div class="f-label">E-mail de escalonamento</div><div class="f-value">Ativado, sem regra de escalonamento adicional</div></div>
+          <div class="f-row"><div class="f-label">Aplicar a (condições)</div><div class="f-value">Match <b>ALL</b>: Type <i>includes</i> Service Request <b>E</b> Sub-Category <i>includes</i> 11 itens: [Acesso administrativo elevado · VPN e acesso remoto · Problemas de Hardware · Lentidão/Performance · Celular corporativo · Periféricos · Impressoras · Certificado digital · Organização de sala de reunião · Organização de estação de trabalho · Limpeza preventiva de equipamento]</div></div>
+        </div>
+      </div>
+      <div class="config-card">
+        <header><h4>4 · SR - 2 dias (Contas, M365, Software, Equipamentos)</h4><span class="path">criada em 09/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Descrição</div><div class="f-value">Criação de usuário, Alteração de acessos e permissões, Teams, Caixa de e-mail compartilhada/lista de distribuição, Office 365 - aplicativos diversos, E-mail (Outlook), OneDrive, SharePoint, Instalação e Configuração de Software, Entrega de equipamento (novo colaborador), Aplicativos SaaS de terceiros, Licenciamento e faturamento, Dúvida geral de TI, Consentimento e registro de aplicativos (Azure AD): prazo de 2 dias da planilha do Catálogo de Serviços.</div></div>
+          <div class="f-row"><div class="f-label">SLA Targets</div><div class="f-value">Todas as 4 prioridades: <b>Responder em 4 Hrs · Resolver em 2 Days</b></div></div>
+          <div class="f-row"><div class="f-label">Horário operacional</div><div class="f-value">Business Hours (calendário "Default" da conta)</div></div>
+          <div class="f-row"><div class="f-label">E-mail de escalonamento</div><div class="f-value">Ativado, sem regra de escalonamento adicional</div></div>
+          <div class="f-row"><div class="f-label">Aplicar a (condições)</div><div class="f-value">Match <b>ALL</b>: Type <i>includes</i> Service Request <b>E</b> Sub-Category <i>includes</i> 14 itens (ver descrição acima)</div></div>
+          <div class="f-row"><div class="f-label">Nota de sessão</div><div class="f-value f-empty">"Gestão da plataforma de Service Desk" foi removida do escopo original desta política, pois é categoria sem subcategoria e não pode ser referenciada por "Sub-Category includes" (ver discrepância acima).</div></div>
+        </div>
+      </div>
+      <div class="config-card">
+        <header><h4>5 · SR - 3 dias (Relatórios e Site Institucional)</h4><span class="path">criada em 09/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Descrição</div><div class="f-value">Levantamento de informações/relatórios, Site institucional/conteúdo: prazo de 3 dias da planilha do Catálogo de Serviços.</div></div>
+          <div class="f-row"><div class="f-label">SLA Targets</div><div class="f-value">Todas as 4 prioridades: <b>Responder em 6 Hrs · Resolver em 3 Days</b></div></div>
+          <div class="f-row"><div class="f-label">Horário operacional</div><div class="f-value">Business Hours (calendário "Default" da conta)</div></div>
+          <div class="f-row"><div class="f-label">E-mail de escalonamento</div><div class="f-value">Ativado, sem regra de escalonamento adicional</div></div>
+          <div class="f-row"><div class="f-label">Aplicar a (condições)</div><div class="f-value">Match <b>ALL</b>: Type <i>includes</i> Service Request <b>E</b> Sub-Category <i>includes</i> [Levantamento de informações/relatórios · Site institucional/conteúdo]</div></div>
+        </div>
+      </div>
+      <div class="config-card">
+        <header><h4>6 · Default SLA Policy (catch-all por Prioridade)</h4><span class="path">atualizada em 09/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Descrição</div><div class="f-value">Catch-all por Prioridade (Impacto × Urgência), usada para Incidentes e para qualquer ticket que não se enquadre nas 5 políticas de Sub-Categoria acima.</div></div>
+          <div class="f-row"><div class="f-label">SLA Targets</div><div class="f-value">
+            <table style="margin:0;"><tr><th>Prioridade</th><th>Responder em</th><th>Resolver em</th></tr>
+            <tr><td>Urgente</td><td class="mono">15 Mins</td><td class="mono">4 Hrs</td></tr>
+            <tr><td>Alto</td><td class="mono">30 Mins</td><td class="mono">8 Hrs</td></tr>
+            <tr><td>Médio</td><td class="mono">2 Hrs</td><td class="mono">24 Hrs</td></tr>
+            <tr><td>Baixo</td><td class="mono">4 Hrs</td><td class="mono">72 Hrs</td></tr></table>
+          </div></div>
+          <div class="f-row"><div class="f-label">Horário operacional</div><div class="f-value">Business Hours (calendário "Default" da conta), todas as prioridades</div></div>
+          <div class="f-row"><div class="f-label">E-mail de escalonamento</div><div class="f-value">Ativado nas 4 prioridades, sem regra de escalonamento adicional</div></div>
+          <div class="f-row"><div class="f-label">Aplicar a (condições)</div><div class="f-value f-empty">Nenhuma: é a política padrão da conta, sem condições próprias; recebe todo ticket que nenhuma das 5 políticas acima capturar.</div></div>
+        </div>
+      </div>
+      <p class="section-sub" style="margin-top:10px;">
+        Todas as 6 políticas foram conferidas reabrindo cada uma em "Edit SLA Policy" depois de salvas, campo a
+        campo, para garantir que os valores gravados batem com o planejado nesta tabela.
+      </p>
+
+      <h3 style="font-size:15px; margin:26px 0 10px;">Atribuição Automática de Tickets <span class="tag">Admin → Workflow Automator → Ticket Automator → Fluxos De Trabalho Baseados Em Eventos</span></h3>
+      <p class="section-sub">
+        Objetivo: todo ticket criado precisa cair automaticamente na fila de algum grupo operador, em vez de ficar
+        sem atribuição até um agente pegar manualmente. O <b>Workflow Automator</b> é o motor de automação em tempo
+        real do FreshService: dispara no momento em que um evento acontece (aqui, "Ticket is created"), avalia uma
+        ou mais <b>condições</b> em sequência (cada uma com ramificação <i>SIM</i>/<i>NÃO</i>) e executa uma
+        <b>ação</b> (aqui, atribuir o ticket a um grupo) quando a condição bate.
+      </p>
+
+      <div class="callout" style="margin-bottom:14px;">
+        <span>⚠</span>
+        <span><b>Limitação de plataforma descoberta nesta sessão:</b> nem o Workflow Automator nem as
+        "Regras do Supervisor" (o outro motor de automação do FreshService, que roda de hora em hora) permitem
+        condicionar uma regra por <b>Subcategoria</b>: o seletor de campos de ambos só oferece a
+        <b>Categoria</b> (nível superior). Isso foi conferido tentando digitar "Sub" no buscador de condições (sem
+        resultado) e revisando manualmente a lista inteira de "Campos de tickets" nos dois construtores de condição,
+        inclusive no modo avançado "Criar expressão". Isso é diferente do motor de <b>Políticas de SLA</b> (ver acima
+        nesta mesma seção), que consegue condicionar por "Sub-Category includes". Na prática, isso significa que uma
+        regra de atribuição automática só consegue diferenciar tickets pela Categoria ampla escolhida pelo
+        solicitante/agente (ex. "Hardware", "Rede e Infraestrutura"), não pela Subcategoria específica do catálogo.</span>
+      </div>
+
+      <p class="section-sub">
+        <b>Decisão (09/09):</b> em vez de tentar separar as 11 categorias do catálogo entre os grupos
+        N1/N2/N3/Segurança hoje (o que a limitação acima tornaria impreciso), <b>todo ticket criado é atribuído
+        automaticamente ao grupo N1</b>, que faz a triagem inicial e reencaminha manualmente quando necessário. Um
+        catálogo de serviços separado, específico para itens de N2/N3, será planejado e configurado em uma sessão
+        futura; nele sim haverá roteamento mais granular.
+      </p>
+
+      <div class="config-card">
+        <header><h4>Atribuição Automática - Triagem Inicial N1</h4><span class="path">criado em 10/09/2026, a partir do exemplo pronto "Category-Based Ticket Routing"</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Origem</div><div class="f-value">Adaptado (não criado do zero) a partir do fluxo de exemplo nativo "Category-Based Ticket Routing", que já vinha desativado na conta trial. O fluxo original tinha 4 condições em cascata (Category is Hardware / Software / Network / Any other category), cada uma atribuindo a um grupo diferente. As 3 primeiras ramificações (Hardware, Software, Network) e suas ações foram removidas, mantendo apenas a condição final "qualquer categoria".</div></div>
+          <div class="f-row"><div class="f-label">Gatilho (Trigger)</div><div class="f-value">Ticket is created: dispara em tempo real para todo ticket novo, independente de canal (portal, e-mail, etc.)</div></div>
+          <div class="f-row"><div class="f-label">Condição</div><div class="f-value">Campos de tickets.Categoria <i>é</i> Qualquer valor, renomeada para "Qualquer categoria (todos os tickets)". Funciona como um catch-all: sempre verdadeira, então 100% dos tickets criados passam pela ramificação SIM.</div></div>
+          <div class="f-row"><div class="f-label">Ação</div><div class="f-value">Atribuir a grupo → <b>N1</b> (renomeada de "Assign to Service Desk Monitoring Team" para "Atribuir ao Grupo N1")</div></div>
+          <div class="f-row"><div class="f-label">Título e descrição do fluxo</div><div class="f-value">Renomeado de "Category-Based Ticket Routing" para <b>"Atribuição Automática - Triagem Inicial N1"</b>, com descrição explicando o motivo (limitação de Subcategoria) e o plano de catálogo N2/N3 futuro.</div></div>
+          <div class="f-row"><div class="f-label">Status</div><div class="f-value"><b>Ativado</b> em 10/09/2026 por Guilherme Silva. Aviso do FreshService ao ativar: o fluxo só vale para tickets <i>novos</i> a partir da publicação; tickets já existentes continuam como estavam.</div></div>
+          <div class="f-row"><div class="f-label">Escopo desta regra</div><div class="f-value f-empty">Cobre as 11 categorias do catálogo por igual, incluindo os casos que haviam gerado dúvida (Segurança da Informação, Rede e Infraestrutura, Fora de Escopo, Gestão da plataforma de Service Desk); todas caem em N1 por enquanto, sem exceção, seguindo a decisão de simplificar hoje e tratar o roteamento fino depois, no catálogo N2/N3.</div></div>
+        </div>
+      </div>
+
+      <h3 style="font-size:15px; margin:26px 0 10px;">Acesso e Segurança: Quem pode abrir chamado e como faz login <span class="tag">Admin → Definições do service desk → Segurança · Admin → Portais → Vantris Holding → Definições do portal</span></h3>
+      <p class="section-sub">
+        O formulário de abertura de chamados tem duas superfícies distintas: interna (agente) e externa (portal,
+        sem exigir login); nenhuma delas tinha sido tocada ainda além do idioma do portal. Levantado o estado "de fábrica" das duas antes de mudar
+        qualquer coisa: no nível da conta, "Controle quem pode registar-se ou criar tickets" vinha em
+        <b>"Qualquer pessoa"</b> (sem domínio); no nível do portal, "Quem pode enviar tickets" já vinha em
+        <b>"Todos"</b> (sem exigir login) e os métodos de login habilitados eram Freshworks nativo <b>+ SSO do
+        Google</b>, inconsistente com a Vantris usar Microsoft 365, não Google.
+      </p>
+
+      <div class="config-card">
+        <header><h4>Restrição de domínio para registro/criação de ticket</h4><span class="path">alterado em 10/09/2026 · Admin → Definições do service desk → Segurança</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Decisão</div><div class="f-value">"Somente as pessoas da empresa @vantrisholding.com.br e @novapay.com.br: são os dois domínios que utilizamos."</div></div>
+          <div class="f-row"><div class="f-label">Campo</div><div class="f-value">"Controle quem pode registar-se ou criar tickets" (<span class="mono">login-restriction</span>)</div></div>
+          <div class="f-row"><div class="f-label">Antes</div><div class="f-value"><span class="mono">Qualquer pessoa</span> (<span class="mono">anyone</span>): qualquer e-mail podia virar Solicitante e abrir ticket</div></div>
+          <div class="f-row"><div class="f-label">Depois</div><div class="f-value"><span class="mono">Utilizadores de domínios especificados</span> (<span class="mono">domain</span>), lista de domínios: <b>vantrisholding.com.br</b> e <b>novapay.com.br</b></div></div>
+          <div class="f-row"><div class="f-label">Alcance do efeito</div><div class="f-value">Segundo o próprio aviso do FreshService nesta tela ("Email domain restriction"), a restrição vale para <b>todos os canais</b> de criação de ticket, inclusive e-mail, não só o portal. Usuários de outros domínios não conseguem se cadastrar, fazer login nem criar ticket.</div></div>
+          <div class="f-row"><div class="f-label">Status</div><div class="f-value">Salvo e confirmado (2 domínios exibidos como tags no campo após salvar)</div></div>
+        </div>
+      </div>
+
+      <div class="config-card">
+        <header><h4>Portal: "Quem pode enviar tickets"</h4><span class="path">verificado em 10/09/2026 · Admin → Portais → Vantris Holding → Definições do portal → Acesso e permissões</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Valor</div><div class="f-value"><span class="mono">Todos</span>, <b>mantido sem alteração</b></div></div>
+          <div class="f-row"><div class="f-label">Por que não mudar para "Utilizadores com sessão iniciada"</div><div class="f-value">É uma configuração distinta da restrição de domínio acima: esta aqui decide se é preciso estar logado para <i>usar o portal</i>, não quem pode virar Solicitante. Como a restrição de domínio (item anterior) já garante que só e-mails @vantrisholding.com.br/@novapay.com.br conseguem criar ticket em qualquer canal, manter "Todos" aqui preserva a submissão pelo portal sem exigir login, só que agora automaticamente limitada aos dois domínios da empresa. Exigir login aqui seria uma restrição adicional, mais forte, fora do escopo definido.</div></div>
+        </div>
+      </div>
+
+      <div class="config-card">
+        <header><h4>Login do Portal: desativação do SSO do Google</h4><span class="path">alterado em 10/09/2026 · Freshworks (conta) → Segurança → Método de início de sessão predefinido</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Decisão</div><div class="f-value">"Utilizaremos apenas Microsoft, que é a plataforma que utilizamos hoje." Confirmado explicitamente ("Nós não utilizamos o Google! Somente Microsoft") após esclarecido o escopo real da mudança (abaixo).</div></div>
+          <div class="f-row"><div class="f-label">Descoberta importante</div><div class="f-value">O ícone de editar em "Política de início de sessão predefinida", dentro das Definições do Portal, <b>não abre uma configuração exclusiva do portal</b>: ele leva para a tela de Segurança da <b>conta Freshworks como um todo</b> (<span class="mono">vantrisholding-org.myfreshworks.com/security/agents/default</span>). Essa política é única: não existe uma política de login separada só para o portal Vantris Holding, ela vale tanto para os <b>agentes</b> quanto para o <b>portal</b> (confirmado abrindo "Mostrar contas" na própria tela, que lista a conta Freshservice e o Portal "Vantris Holding" sob a mesma política predefinida).</div></div>
+          <div class="f-row"><div class="f-label">Método alterado</div><div class="f-value">"Início de sessão no Google": <span class="mono">Ativado</span> → <span class="mono">Desativado</span></div></div>
+          <div class="f-row"><div class="f-label">Métodos que continuam ativos</div><div class="f-value">Apenas <b>Início de sessão Freshworks</b> (e-mail + senha nativos). Passkey, login sem senha e SSO (SAML/OAuth/OIDC/JWT) seguem desativados.</div></div>
+          <div class="f-row"><div class="f-label">Sobre o "apenas Microsoft"</div><div class="f-value">Na época, o login via Microsoft/Entra ID de fato (SAML SSO) ainda não estava configurado. "Apenas Microsoft" foi implementado então no sentido de <b>eliminar o Google como opção</b>, com o login seguindo pelo Freshworks nativo. <b>Atualização de 22/09/2026:</b> o SSO real com Azure AD foi configurado e testado com sucesso — ver card "Login via SSO com Microsoft Entra ID (Azure AD)" logo abaixo.</div></div>
+          <div class="f-row"><div class="f-label">Status</div><div class="f-value">Alterado com sucesso (mensagem de confirmação do próprio Freshworks) e reconferido após recarregar a página; toggle permanece desativado.</div></div>
+        </div>
+      </div>
+
+      <div class="config-card">
+        <header><h4>Login via SSO com Microsoft Entra ID (Azure AD)</h4><span class="path">configurado em 22/09/2026 · Freshworks (conta) → Segurança → Início de sessão SSO · Entra ID → Aplicações empresariais</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Contexto</div><div class="f-value">Retomada a integração com a Microsoft que estava pausada. Decidida a ordem de configuração: primeiro SSO (login), depois SCIM (provisionamento automático de contas) — assim, quando o SCIM criar contas novas, elas já nascem prontas para logar com a Microsoft, sem depender de senha própria do Freshworks.</div></div>
+          <div class="f-row"><div class="f-label">App criado no Entra ID</div><div class="f-value"><span class="mono">Freshworks | Logon com base em SAML</span> (Aplicações empresariais → Nova aplicação → galeria → "Freshworks"; o próprio assistente de SSO do Freshworks indica esse nome, não "Freshservice")</div></div>
+          <div class="f-row"><div class="f-label">Configuração SAML</div><div class="f-value">Identificador (ID da Entidade) e URL de Resposta (ACS) informados pelo Freshworks, colados na "Configuração Básica de SAML" do Entra ID. Do lado do Freshworks (Segurança → Início de sessão SSO → Azure AD utilizando SAML): Identificador do Azure AD, URL de início de sessão e Certificado (Base64) copiados do Entra ID.</div></div>
+          <div class="f-row"><div class="f-label">Problema 1: identificador de entidade divergente</div><div class="f-value">Teste de login pela URL específica do FreshService (<span class="mono">novapay-service.freshservice.com</span>) falhou com erro do Entra ID (AADSTS700016): o identificador enviado nessa rota é diferente do identificador genérico da conta Freshworks (tem um sufixo numérico e termina em <span class="mono">/metadata</span>). <b>Correção:</b> adicionado esse segundo identificador na mesma "Configuração Básica de SAML" do Entra ID, mantendo o original como padrão.</div></div>
+          <div class="f-row"><div class="f-label">Problema 2: resposta SAML não assinada</div><div class="f-value">Após corrigir o identificador, o login avançou (inclusive disparando o MFA da Microsoft), mas o Freshworks recusou com "SAML response is not signed": por padrão o Entra ID assina só a Declaração (Assertion), não a Resposta (Response) inteira, que é o que o Freshworks exige. <b>Correção:</b> em Certificados SAML → Editar, opção de assinatura alterada de "Assinar declaração" para <b>"Assinar resposta e declaração"</b>.</div></div>
+          <div class="f-row"><div class="f-label">Teste final</div><div class="f-value">Login testado com sucesso pelo fluxo iniciado no próprio FreshService (janela anônima → <span class="mono">novapay-service.freshservice.com/login</span> → botão de SSO → autenticação Microsoft com MFA → volta logado). Confirmado <b>funcionando</b>.</div></div>
+          <div class="f-row"><div class="f-label">Convivência com o login nativo</div><div class="f-value">O "Início de sessão da Freshworks" (e-mail/senha) <b>continua ativo</b> junto com o SSO — não é uma troca exclusiva, ninguém foi travado.</div></div>
+          <div class="f-row"><div class="f-label">Pendência relacionada</div><div class="f-value">Instalação do app de provisionamento automático (SCIM) iniciada na mesma sessão, mas pausada no meio (tela de Authorize/Install) para priorizar o SSO primeiro; falta retomar (ver <a href="#proximos-passos">Próximos passos</a>).</div></div>
+        </div>
+      </div>
+
+      <div class="config-card">
+        <header><h4>Migração de domínio de e-mail: @vantrisholding.com.br → @novapay.com.br</h4><span class="path">alterado em 15/09/2026 · Admin → Agentes → Guilherme Silva → Editar detalhes do agente → Alterar e-mail</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Contexto</div><div class="f-value">Migração da conta de e-mail no Microsoft 365 de @vantrisholding.com.br para @novapay.com.br (empresa renomeando a marca/domínio principal para novapay), refletida também no login de agente no FreshService.</div></div>
+          <div class="f-row"><div class="f-label">Risco de lockout avaliado</div><div class="f-value">Não há risco pela restrição de domínio (ver card acima): vantrisholding.com.br e novapay.com.br já estão ambos na lista de domínios permitidos para login/criação de ticket. O risco real identificado foi de notificação/recuperação de conta, mitigado porque o alias @vantrisholding.com.br segue ativo no Microsoft 365.</div></div>
+          <div class="f-row"><div class="f-label">Campo</div><div class="f-value">E-mail do agente (<span class="mono">user[email]</span>): este campo é somente leitura na tela principal de edição; a alteração passa por um fluxo separado "Alterar e-mail"</div></div>
+          <div class="f-row"><div class="f-label">Antes</div><div class="f-value"><span class="mono">guilherme.silva@vantrisholding.com.br</span></div></div>
+          <div class="f-row"><div class="f-label">Depois</div><div class="f-value"><span class="mono">guilherme.silva@novapay.com.br</span></div></div>
+          <div class="f-row"><div class="f-label">Aviso do próprio Fresh</div><div class="f-value">"Ao confirmar esta alteração e salvar os detalhes do agente, a sessão é encerrada imediatamente. É necessário ativar a conta novamente através do e-mail de ativação enviado ao novo endereço." Confirmado antes de salvar, ciente do acesso já existente à caixa @novapay.com.br.</div></div>
+          <div class="f-row"><div class="f-label">Status</div><div class="f-value">Alteração salva; sessão do agente encerrada como avisado (navegador redirecionado ao portal público de suporte). <b>Concluído</b>: Guilherme ativou a conta pelo e-mail de ativação e confirmou login normalizado com guilherme.silva@novapay.com.br em 15/09/2026.</div></div>
+        </div>
+      </div>
+
+      <div class="config-card">
+        <header><h4>Renomeação da conta FreshService: "Vantris Holding" → "novapay"</h4><span class="path">alterado em 15/09/2026 · Admin → Conta → Nome da conta</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Decisão</div><div class="f-value">Empresa está migrando a marca/domínio principal para novapay; atualização do nome da conta no FreshService também necessária, em seguida à troca do e-mail de agente.</div></div>
+          <div class="f-row"><div class="f-label">Campo</div><div class="f-value">"Nome da conta" (<span class="mono">account_name</span>): Admin → Conta, editável via ícone de lápis ao lado do nome, abre modal "Editar nome da conta"</div></div>
+          <div class="f-row"><div class="f-label">Antes</div><div class="f-value"><span class="mono">Vantris Holding</span></div></div>
+          <div class="f-row"><div class="f-label">Depois</div><div class="f-value"><span class="mono">NovaPay</span> (o campo normalizou a grafia digitada "novapay" para "NovaPay" ao salvar)</div></div>
+          <div class="f-row"><div class="f-label">Escopo desta mudança</div><div class="f-value">Apenas o nome de exibição da conta FreshService (aparece no cabeçalho/título das páginas). <b>Não altera</b> o domínio/URL da instância (permanece vantrisholding.freshservice.com; ver card seguinte).</div></div>
+          <div class="f-row"><div class="f-label">Status</div><div class="f-value">Salvo e reconferido após recarregar a página.</div></div>
+        </div>
+      </div>
+
+      <div class="config-card">
+        <header><h4>E-mail de contato principal da conta</h4><span class="path">alterado em 15/09/2026 · Admin → Conta → Detalhes do contacto → Detalhes do contacto principal</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Contexto</div><div class="f-value">Campo distinto do e-mail de login do agente (ver card acima): é o e-mail "usado para todas as comunicações do Freshservice relacionadas com a conta" (faturamento, avisos administrativos etc.). Continuava em @vantrisholding.com.br mesmo após a troca do login; identificado e corrigido para manter consistência.</div></div>
+          <div class="f-row"><div class="f-label">Campo</div><div class="f-value"><span class="mono">account_configuration[contact_info][email]</span></div></div>
+          <div class="f-row"><div class="f-label">Antes</div><div class="f-value"><span class="mono">guilherme.silva@vantrisholding.com.br</span></div></div>
+          <div class="f-row"><div class="f-label">Depois</div><div class="f-value"><span class="mono">guilherme.silva@novapay.com.br</span></div></div>
+          <div class="f-row"><div class="f-label">Status</div><div class="f-value">Salvo com sucesso.</div></div>
+        </div>
+      </div>
+
+      <h3 style="font-size:15px; margin:26px 0 10px;">Canais de e-mail / Caixas de correio <span class="tag">Admin → Definições do e-mail e das caixas de correio → Adicionar caixa de correio</span></h3>
+      <p class="section-sub">
+        Além da caixa padrão de IT (it@vantrisholding.freshservice.com, sem uso ativo), foi criada uma segunda caixa
+        de correio para o canal oficial do service desk, usando o domínio próprio da empresa em vez do domínio
+        auto-gerado do Freshservice.
+      </p>
+      <div class="config-card">
+        <header><h4>Service Desk novapay</h4><span class="path">criada em 18/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Nome da caixa de correio</div><div class="f-value"><span class="mono">Service Desk novapay</span>, nome do remetente usado nas respostas aos tickets</div></div>
+          <div class="f-row"><div class="f-label">E-mail do service desk</div><div class="f-value"><span class="mono">servicedesk@novapay.com.br</span>, também o endereço de resposta</div></div>
+          <div class="f-row"><div class="f-label">Atribuir tickets a um grupo de agentes</div><div class="f-value"><b>N1</b>, mesmo padrão de triagem inicial já usado em <a href="#config-realizada">Atribuição Automática de Tickets</a></div></div>
+          <div class="f-row"><div class="f-label">Servidor de e-mail</div><div class="f-value">"O seu servidor de e-mail" (conexão direta, não o encaminhamento padrão do Freshservice)</div></div>
+          <div class="f-row"><div class="f-label">Sistema de e-mail</div><div class="f-value">Entrada e saída (recebe e envia pela própria caixa)</div></div>
+          <div class="f-row"><div class="f-label">Provedor</div><div class="f-value">Microsoft Outlook, ligar via OAuth, método <b>Autenticação da API do Microsoft Graph</b> (recomendado pelo próprio Freshservice)</div></div>
+          <div class="f-row"><div class="f-label">Conta usada na autenticação</div><div class="f-value"><span class="mono">guilherme.silva@novapay.com.br</span> (conta pessoal de Guilherme), não a própria caixa compartilhada: uma caixa compartilhada não tem login interativo próprio, então o Freshservice autentica com uma conta que tenha Acesso Total sobre ela. Guilherme já tinha Acesso Total sobre servicedesk@novapay.com.br desde antes deste projeto. O status <b>"Associado"</b> (verde) retornado para entrada e saída confirma que a conexão funcionou.</div></div>
+          <div class="f-row"><div class="f-label">Escopo de permissões (OAuth)</div><div class="f-value"><span class="mono">offline_access, User.Read, Mail.Read, Mail.Read.Shared, Mail.ReadWrite, Mail.ReadWrite.Shared, Mail.Send, Mail.Send.Shared</span></div></div>
+          <div class="f-row"><div class="f-label">Login Microsoft</div><div class="f-value">Feito manualmente, conforme regra permanente deste projeto (credenciais/telas de login da Microsoft nunca são preenchidas automaticamente)</div></div>
+          <div class="f-row"><div class="f-label">Status</div><div class="f-value">Salvo com sucesso: caixa aparece na lista "Todas as caixas de correio para IT" com e-mail servicedesk@novapay.com.br, "Usar um servidor de e-mail personalizado" e grupo N1.</div></div>
+        </div>
+      </div>
+
+      <p class="section-sub" style="margin-top:14px;">
+        Requisito: todo ticket aberto para a Ouvidoria (ouvidoria@novapay.com.br) deve ser encaminhado
+        automaticamente ao grupo <b>Ouvidoria</b>. Diferença em relação à caixa anterior: não há acesso
+        pessoal a essa caixa; só uma conta de serviço ("service") tem. Dois caminhos avaliados: encaminhamento
+        simples (não exige acesso à caixa, só uma regra de encaminhamento configurada por quem tem acesso) ou
+        conexão direta via OAuth (exige Acesso Total permanente de quem autentica, não só no momento da
+        configuração; o Freshservice reutiliza essa conta continuamente para sincronizar). Optou-se por
+        tentar a conexão direta usando a conta "service".
+      </p>
+      <div class="config-card">
+        <header><h4>Ouvidoria novapay</h4><span class="path">criada em 18/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Nome da caixa de correio</div><div class="f-value"><span class="mono">Ouvidoria novapay</span></div></div>
+          <div class="f-row"><div class="f-label">E-mail do service desk</div><div class="f-value"><span class="mono">ouvidoria@novapay.com.br</span></div></div>
+          <div class="f-row"><div class="f-label">Atribuir tickets a um grupo de agentes</div><div class="f-value"><b>Ouvidoria</b></div></div>
+          <div class="f-row"><div class="f-label">Servidor de e-mail</div><div class="f-value">"O seu servidor de e-mail" (conexão direta) · Entrada e saída</div></div>
+          <div class="f-row"><div class="f-label">Provedor</div><div class="f-value">Microsoft Outlook, OAuth, Autenticação da API do Microsoft Graph</div></div>
+          <div class="f-row"><div class="f-label">Conta usada na autenticação</div><div class="f-value"><b>guilherme.silva@novapay.com.br</b>, não a conta "service" planejada. O navegador já estava com sessão Microsoft ativa; ao tentar trocar de conta ("Usar outra conta") o fluxo levou a uma tela de login real da Microsoft, e optou-se por prosseguir com a própria conta em vez de logar como "service".</div></div>
+          <div class="f-row"><div class="f-label">Acesso à caixa</div><div class="f-value">Confirmado <b>Acesso Total</b> sobre ouvidoria@novapay.com.br com a própria conta, consistente com o status "Associado" retornado pelo Freshservice para entrada e saída.</div></div>
+          <div class="f-row"><div class="f-label">Status</div><div class="f-value">Salvo: caixa aparece na lista "Todas as caixas de correio para IT" com e-mail ouvidoria@novapay.com.br, "Usar um servidor de e-mail personalizado" e grupo Ouvidoria.</div></div>
+        </div>
+      </div>
+
+      <h3 style="font-size:15px; margin:26px 0 10px;">Guia de onboarding nativo <span class="tag">/a/onboarding, acessado via botão "Configurar e explorar" no topo da tela</span></h3>
+      <p class="section-sub">
+        Checklist nativo do Freshservice, sem acesso por link direto nem por busca; abre a partir do botão
+        "Configurar e explorar" no canto superior direito de qualquer tela da conta, não por navegação normal do
+        menu. Revisado item a item.
+      </p>
+      <div class="config-card">
+        <header><h4>Configuração rápida <span class="tag mono">1/4 concluído</span></h4><span class="path">revisado em 18/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Configurar e-mail</div><div class="f-value">✅ <b>Já concluído</b>: o próprio Freshservice já marca este item como feito, provavelmente por causa das caixas servicedesk@novapay.com.br e ouvidoria@novapay.com.br já conectadas nesta sessão.</div></div>
+          <div class="f-row"><div class="f-label">Configurar o portal de apoio</div><div class="f-value">Item acessado em 18/09/2026: abre um modal <b>"Explorar o portal de autoatendimento"</b> com um campo de texto pré-preenchido "vantrisholding" (+ ".freshservice.com") e um botão "Explorar portal". Investigado antes de qualquer alteração: <b>não é uma ferramenta de troca de subdomínio</b>, é só uma pré-visualização/demonstração. O botão "Explorar portal" apenas monta e abre o link `https://{texto digitado}.freshservice.com/support/home`; não há botão de salvar, e digitar "novapay" ali não mudaria nada na conta real, só tentaria abrir uma instância diferente (inexistente). Isso não é o caminho de autoatendimento que a Prisma Consultoria mencionou para trocar o subdomínio; esse item segue sem solução encontrada (ver <a href="#proximos-passos">Próximos passos</a>). O restante do portal (idioma, quem pode enviar tickets etc.) já foi configurado à parte, ver <a href="#config-realizada">Acesso e Segurança</a>.</div></div>
+          <div class="f-row"><div class="f-label">Convidar agentes</div><div class="f-value f-empty">Não concluído: nenhum agente além do Guilherme foi convidado ainda</div></div>
+          <div class="f-row"><div class="f-label">Personalizar portal do agente</div><div class="f-value f-empty">Não concluído</div></div>
+        </div>
+      </div>
+      <div class="config-card">
+        <header><h4>Explore o Freshservice: checklist de funcionalidades por área</h4><span class="path">revisado em 18/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Emissão de tickets</div><div class="f-value">Criar um ticket · Resolver um ticket · Resumir tickets com o Freddy IA; nenhum marcado como concluído</div></div>
+          <div class="f-row"><div class="f-label">Gestão de serviços</div><div class="f-value">Criar um artigo de solução · Criar um fluxo de trabalho · <b>Personalizar os campos do ticket ✅ já concluído</b> (reflete a configuração do Field Manager feita nesta sessão: Grupo, Agente, Departamento, Prioridade e Incidente Grave)</div></div>
+          <div class="f-row"><div class="f-label">Gestão de operações de TI</div><div class="f-value">Associar uma ferramenta de monitorização · Criar uma escala de serviço; nenhum concluído</div></div>
+          <div class="f-row"><div class="f-label">Gestão de mudanças</div><div class="f-value">Criar uma mudança · Criar um CCM (Conselho Consultivo de Mudanças) · Associar uma mudança a um incidente; nenhum concluído (relevante para a seção <a href="#change-problem">Change &amp; Problem Management</a>)</div></div>
+          <div class="f-row"><div class="f-label">Gestão de projetos de TI</div><div class="f-value">Criar um projeto · Atualizar uma tarefa de projeto; nenhum concluído</div></div>
+          <div class="f-row"><div class="f-label">Áreas de trabalho</div><div class="f-value">Criar uma área de trabalho · Configurar o e-mail da área de trabalho; nenhum concluído (áreas de trabalho = os módulos "IT", "RH", "Instalações" etc. que aparecem como sugestão ao clicar no seletor de área de trabalho, ao lado do logo)</div></div>
+        </div>
+      </div>
+      <p class="section-sub" style="margin-top:10px;">
+        Painel lateral "Personalizado para si" também sugere integrações populares para conectar (Slack, Microsoft
+        Teams, Office 365), mas não é um item de checklist, apenas um atalho de descoberta.
+      </p>
+
+      <h3 style="font-size:15px; margin:26px 0 10px;">Troca de subdomínio <span class="badge done">Concluído</span></h3>
+      <div class="config-card">
+        <header><h4>URL da instância trocada para novapay-service.freshservice.com</h4><span class="path">Portais de apoio → Vantris Holding → Definições do portal → Definições gerais · 18/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Caminho</div><div class="f-value">Admin → Portais → (clicar no portal "Vantris Holding") → aba <b>"Definições do portal"</b> → sub-aba "Definições gerais" → campo <b>"URL do portal"</b> → ícone de lápis "Editar URL do portal"</div></div>
+          <div class="f-row"><div class="f-label">Antes</div><div class="f-value">vantrisholding.freshservice.com</div></div>
+          <div class="f-row"><div class="f-label">Depois</div><div class="f-value"><b>novapay-service.freshservice.com</b></div></div>
+          <div class="f-row"><div class="f-label">Disponibilidade do nome</div><div class="f-value">Subdomínios são compartilhados globalmente entre todos os clientes Freshservice, não só dentro desta conta. O nome exato "novapay" já estava em uso por outra conta, por isso a escolha final foi "novapay-service".</div></div>
+          <div class="f-row"><div class="f-label">Avisos do próprio Freshservice ao confirmar a troca</div><div class="f-value">Efeito imediato: sessões ativas de todos os usuários são encerradas, o URL antigo e favoritos do navegador param de funcionar, e links (para tickets, soluções, outros dados), imagens e anexos de e-mails já enviados deixam de funcionar. Fica pendente reconfigurar, quando aplicável: Início de sessão único (SSO), endereços de e-mail em regras de reencaminhamento, webhooks/automações que chamam a API do Freshservice, apps do marketplace e integrações, agentes de descoberta de ativos (precisam ser reinstalados) e o widget de feedback (snippet precisa ser gerado de novo). Nenhum desses itens está em uso hoje nesta conta.</div></div>
+          <div class="f-row"><div class="f-label">Status</div><div class="f-value">Confirmado e testado: painel de administração e portal de suporte funcionando normalmente em novapay-service.freshservice.com.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="service-desk">
+      <h2>Service Desk / Gestão de Incidentes <span class="badge wip">Parcialmente definido</span></h2>
+      <p class="section-sub">Categorização, priorização e SLA: a espinha dorsal do atendimento diário.</p>
+
+      <div class="callout accent">
+        <span>→</span>
+        <span><b>Categorias implementadas no FreshService:</b> a taxonomia de categoria/subcategoria do catálogo
+        real (<a href="#catalogo">ver seção Catálogo de Serviços</a>), já validada pelo Guilherme, foi configurada
+        no campo "Category" do FreshService em 09/09/2026; ver detalhes campo a campo em
+        <a href="#config-realizada">Registro de Configuração Realizada</a>. Falta vincular o grupo operador via
+        regra de atribuição automática e criar as políticas de SLA.</span>
+      </div>
+
+      <h3 style="font-size:15px; margin:22px 0 10px;">Grupos operadores <span class="badge done">Criados no FreshService</span></h3>
+      <div class="grid-3">
+        <div class="card"><h3>N1</h3><p>Primeiro nível: maior parte dos chamados de contas, M365, equipamentos e periféricos.</p></div>
+        <div class="card"><h3>N2</h3><p>Segundo nível: acesso administrativo, Azure AD, rede/links, certificados.</p></div>
+        <div class="card"><h3>N3</h3><p>Terceiro nível: escalonamento especializado (adicionado na revisão de 09/09).</p></div>
+        <div class="card"><h3>Segurança</h3><p>Phishing, incidentes de segurança, perda/roubo de equipamento.</p></div>
+        <div class="card"><h3>Ouvidoria</h3><p>Reclamações, denúncias, sugestões e feedback (criado em 09/09).</p></div>
+      </div>
+      <p class="section-sub" style="margin-top:8px;">Grupo de Facilities removido por ora: itens de "Administrativo e Facilities" no catálogo ficam sem grupo operador definido até decisão futura. Campos e detalhes completos de cada grupo em <a href="#config-realizada">Registro de Configuração Realizada</a>.</p>
+
+      <h3 style="font-size:15px; margin:22px 0 10px;">Matriz de priorização <span class="badge done">Configurada no FreshService (padrão nativo)</span></h3>
+      <p class="section-sub">
+        O catálogo já traz um SLA fixo por categoria/subcategoria; isso vale para <b>Solicitações de Serviço</b>
+        (pedidos planejados: criação de usuário, troca de equipamento etc.), onde a gravidade não varia muito de um
+        chamado para outro. Esta matriz é complementar e serve para <b>Incidentes</b> (algo que estava funcionando e
+        parou: queda de link, Wi-Fi fora do ar, hardware com defeito), onde a mesma categoria pode abranger desde um
+        problema pontual (1 pessoa afetada) até uma interrupção geral (todo o escritório); impacto e urgência variam
+        ticket a ticket, então o SLA de um Incidente vem da <b>Prioridade calculada</b> (tabela abaixo), não do valor
+        fixo da categoria. Mantida a matriz nativa do FreshService, sem alterações; detalhes campo a campo em
+        <a href="#config-realizada">Registro de Configuração Realizada</a>.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <tr><th></th><th>Urgência alta</th><th>Urgência média</th><th>Urgência baixa</th></tr>
+          <tr><td><b>Impacto alto</b></td><td><span class="pill-accent">Urgente (P1)</span></td><td><span class="pill-accent">Alto (P2)</span></td><td><span class="pill-accent">Médio (P3)</span></td></tr>
+          <tr><td><b>Impacto médio</b></td><td><span class="pill-accent">Alto (P2)</span></td><td><span class="pill-accent">Médio (P3)</span></td><td><span class="pill-accent">Baixo (P4)</span></td></tr>
+          <tr><td><b>Impacto baixo</b></td><td><span class="pill-accent">Médio (P3)</span></td><td><span class="pill-accent">Baixo (P4)</span></td><td><span class="pill-accent">Baixo (P4)</span></td></tr>
+        </table>
+      </div>
+      <p class="section-sub" style="margin-top:8px;">
+        Preenchimento de Impacto/Urgência é manual por enquanto (decisão de 09/09); dá para automatizar por
+        categoria depois via Business Rule/Workflow Automator (ver <a href="#config-realizada">Registro de
+        Configuração Realizada</a>).
+      </p>
+
+      <h3 style="font-size:15px; margin:22px 0 10px;">SLAs propostos por prioridade: incidentes</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Prioridade</th><th>1ª resposta</th><th>Resolução</th></tr>
+          <tr><td class="mono">P1 · Crítico</td><td class="mono">15 min</td><td class="mono">4h</td></tr>
+          <tr><td class="mono">P2 · Alto</td><td class="mono">30 min</td><td class="mono">8h</td></tr>
+          <tr><td class="mono">P3 · Médio</td><td class="mono">2h</td><td class="mono">24h</td></tr>
+          <tr><td class="mono">P4 · Baixo</td><td class="mono">4h</td><td class="mono">72h</td></tr>
+        </table>
+      </div>
+      <p class="section-sub" style="margin-top:10px;">
+        Valores de partida para validação: o FreshService permite políticas de SLA distintas por grupo/departamento
+        e horário de atendimento (business hours), a definir junto com a matriz real de atendimento.
+      </p>
+
+      <h3 style="font-size:15px; margin:22px 0 10px;">Acesso e formulário de abertura <span class="badge done">Restrição de domínio e login configurados</span></h3>
+      <p class="section-sub">
+        Quem pode abrir chamado (qualquer canal, inclusive e-mail) agora é restrito aos domínios
+        <b>@vantrisholding.com.br</b> e <b>@novapay.com.br</b>; o portal continua sem exigir login para submeter ticket
+        (decisão deliberada: a restrição de domínio já cobre isso). Login por Google foi desativado em toda a conta
+        Freshworks (agentes e portal); só o login nativo Freshworks fica ativo até o SSO da Microsoft ser configurado
+        junto com o Azure AD/SCIM. Detalhes campo a campo em <a href="#config-realizada">Registro de Configuração
+        Realizada, Acesso e Segurança</a>.
+      </p>
+    </section>
+
+    <section id="csat">
+      <h2>Pesquisa de Satisfação (CSAT) <span class="badge done">100% em português, 2 perguntas, publicada</span></h2>
+      <p class="section-sub">
+        Requisito: pesquisa de satisfação em duas etapas, uma sobre o <b>serviço/atendimento</b> e outra
+        sobre a <b>solução</b> apresentada, disparando juntas no mesmo envio na Resolução do ticket, toda em
+        português e com a logo da NovaPay. Base usada: a pesquisa nativa "Default Employee Satisfaction Survey IT"
+        já existente na conta, adaptada em vez de criar uma pesquisa nova. <b>Concluído em 23/09/2026:</b> pesquisa
+        traduzida por completo, reduzida às 2 perguntas definidas (a 3ª pergunta de texto livre foi removida), logo
+        adicionada, e nome da pesquisa e do acionador atualizados.
+      </p>
+
+      <h3 style="font-size:15px; margin-bottom:10px;">Identidade da pesquisa <span class="tag">Build survey → ícone de engrenagem "Definições do inquérito"</span></h3>
+      <div class="config-card">
+        <header><h4>Nome da pesquisa</h4><span class="path">renomeada em 23/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Antes</div><div class="f-value"><span class="mono">Default Employee Satisfaction Survey IT</span></div></div>
+          <div class="f-row"><div class="f-label">Depois</div><div class="f-value"><b>Pesquisa de Satisfação - TI</b></div></div>
+          <div class="f-row"><div class="f-label">Logo</div><div class="f-value">Logo da NovaPay adicionada no cabeçalho da pesquisa, acima do texto de introdução.</div></div>
+        </div>
+      </div>
+
+      <h3 style="font-size:15px; margin:26px 0 10px;">Textos fixos da pesquisa <span class="tag">Build survey → Introdução / Página de agradecimento</span></h3>
+      <div class="config-card">
+        <header><h4>Texto de introdução</h4><span class="path">traduzido em 23/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Antes</div><div class="f-value f-empty">"Thank you for your time. This survey will take less than a minute to complete."</div></div>
+          <div class="f-row"><div class="f-label">Depois</div><div class="f-value">"Obrigado pelo seu tempo. Esta pesquisa leva menos de um minuto para ser concluída."</div></div>
+        </div>
+      </div>
+      <div class="config-card">
+        <header><h4>Página de agradecimento (pós-envio)</h4><span class="path">traduzida em 23/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Depois</div><div class="f-value">"Obrigado pela sua resposta. O seu feedback é muito importante para a nossa melhoria contínua."</div></div>
+        </div>
+      </div>
+
+      <h3 style="font-size:15px; margin:26px 0 10px;">Perguntas da pesquisa (2, conforme definido) <span class="tag">Admin → Surveys → Pesquisa de Satisfação - TI → Build survey</span></h3>
+      <div class="config-card">
+        <header><h4>Pergunta 1: Etapa "Serviço" <span class="tag mono">Q1</span></h4><span class="path">texto e rótulos editados em 09/09/2026 (pergunta já existia)</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Tipo</div><div class="f-value">Rating scale (emoji), 5 pontos</div></div>
+          <div class="f-row"><div class="f-label">Texto da pergunta</div><div class="f-value">"Como você avalia o atendimento (cordialidade, agilidade e comunicação do agente)?"</div></div>
+          <div class="f-row"><div class="f-label">Escala</div><div class="f-value">Ordem: Low to high · Rótulos (1→5): Muito insatisfeito · Insatisfeito · Neutro · Satisfeito · Muito satisfeito</div></div>
+          <div class="f-row"><div class="f-label">Estilo do botão</div><div class="f-value">Standard (emojis coloridos)</div></div>
+          <div class="f-row"><div class="f-label">Obrigatória</div><div class="f-value">Sim ("Make this question mandatory" ativado)</div></div>
+        </div>
+      </div>
+      <div class="config-card">
+        <header><h4>Pergunta 2: Etapa "Solução" <span class="tag mono">Q3</span></h4><span class="path">criada em 09/09/2026, tipo alterado em 22-23/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Tipo</div><div class="f-value"><b>Multiple choice (Sim/Não)</b> — alterado de Rating scale 5 pontos para Sim/Não via o modal "Adicionar um conjunto de opções" (textarea com as opções "Sim" / "Não")</div></div>
+          <div class="f-row"><div class="f-label">Texto da pergunta</div><div class="f-value">"A solução apresentada resolveu o seu problema?"</div></div>
+          <div class="f-row"><div class="f-label">Opções</div><div class="f-value">Sim · Não</div></div>
+          <div class="f-row"><div class="f-label">Obrigatória</div><div class="f-value">Sim</div></div>
+          <div class="f-row"><div class="f-label">Restrição descoberta nesta sessão</div><div class="f-value f-empty">O "Tipo" de uma pergunta já salva fica travado no builder do FreshService; só é editável logo após clonar a pergunta ("⋮ → Clonar"). Por isso essa troca de tipo foi feita diretamente no ambiente, seguindo um passo a passo detalhado.</div></div>
+        </div>
+      </div>
+      <div class="config-card">
+        <header><h4>Pergunta de texto livre <span class="tag mono">era Q2</span></h4><span class="path"><b>removida em 23/09/2026</b></span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">O que era</div><div class="f-value f-empty">"Anything else you would like us to know?" — não fazia parte do pedido original de 2 perguntas.</div></div>
+          <div class="f-row"><div class="f-label">Ação</div><div class="f-value">Eliminada via "⋮ → Eliminar" na própria pergunta, para deixar a pesquisa com exatamente 2 perguntas, conforme definido.</div></div>
+        </div>
+      </div>
+
+      <h3 style="font-size:15px; margin:26px 0 10px;">Acionador (trigger) <span class="tag">Aba Acionadores da pesquisa</span></h3>
+      <div class="config-card">
+        <header><h4>Nome do acionador</h4><span class="path">renomeado em 23/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Antes</div><div class="f-value"><span class="mono">Default Employee Satisfaction Trigger IT</span></div></div>
+          <div class="f-row"><div class="f-label">Depois</div><div class="f-value"><b>Avalie a sua experiência com este chamado.</b></div></div>
+          <div class="f-row"><div class="f-label">Tipo / condição / destinatário</div><div class="f-value">Inalterado: Event-based, "Status is changed" de Any para Resolved, enviado ao Requester, canais E-mail + Portal</div></div>
+        </div>
+      </div>
+      <div class="config-card">
+        <header><h4>Canal E-mail</h4><span class="path">traduzido e aplicado nesta sessão</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Assunto</div><div class="f-value">"Avalie o seu atendimento - [ID do ticket] : [Assunto]"</div></div>
+          <div class="f-row"><div class="f-label">Pré-cabeçalho</div><div class="f-value">"O seu feedback é importante para nós!"</div></div>
+          <div class="f-row"><div class="f-label">Corpo</div><div class="f-value">"Olá [Nome do solicitante]," / "O seu feedback é importante! Por favor, dedique um momento para avaliar o seu atendimento recente." / fechamento "Atenciosamente,"</div></div>
+        </div>
+      </div>
+      <div class="config-card">
+        <header><h4>Canal Portal</h4><span class="path">traduzido e aplicado nesta sessão</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Frase de prompt</div><div class="f-value">"Avalie a sua experiência com este chamado."</div></div>
+          <div class="f-row"><div class="f-label">Botão</div><div class="f-value">"Responder à pesquisa"</div></div>
+        </div>
+      </div>
+      <p class="section-sub" style="margin-top:10px;">
+        Nem o builder da pesquisa nem os canais do acionador suportam múltiplos idiomas (o seletor "A mostrar"
+        só oferece "Inglês"): toda a tradução foi feita sobrescrevendo o texto em inglês diretamente, não há um
+        slot de PT-BR separado.
+      </p>
+      <p class="section-sub" style="margin-top:6px;">
+        <b>Estado final:</b> pesquisa <b>publicada</b> (status voltou a "Active" depois de republicar após a
+        renomeação), 100% em português, 2 perguntas, logo da NovaPay, nomes de pesquisa e acionador atualizados.
+        Nenhum item pendente nesta frente.
+      </p>
+
+      <h3 style="font-size:15px; margin:26px 0 10px;">Outra pesquisa nativa da conta: NPS <span class="badge done">Revisada, mantida desativada</span></h3>
+      <p class="section-sub">
+        A conta também trazia, por padrão, uma segunda pesquisa nativa separada: <b>"Default NPS Survey (IT)"</b>
+        (Net Promoter Score, pergunta única "How likely are you to recommend our services to a colleague or
+        peer?", escala 0-10). Revisada em 24/09/2026.
+      </p>
+      <div class="config-card">
+        <header><h4>Default NPS Survey (IT) + Default NPS Trigger (IT)</h4><span class="path">revisada em 24/09/2026, nenhuma alteração feita</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Diferença em relação à CSAT</div><div class="f-value">Pergunta única e genérica sobre lealdade geral à TI, não sobre um chamado específico (a CSAT acima é por chamado, disparada na Resolução).</div></div>
+          <div class="f-row"><div class="f-label">Acionador</div><div class="f-value">"Default NPS Trigger (IT)", tipo <b>Agendado</b> (não por evento/ticket), canal só E-mail.</div></div>
+          <div class="f-row"><div class="f-label">Status do acionador</div><div class="f-value"><b>Desativado</b> (já vem assim por padrão da conta) — hoje não é enviada a ninguém.</div></div>
+          <div class="f-row"><div class="f-label">Decisão</div><div class="f-value">Deixar desativada; ainda em inglês, sem texto de introdução configurado, sem nenhum uso planejado por ora.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="catalogo">
+      <h2>Catálogo de Serviços <span class="badge done">Definido</span></h2>
+      <p class="section-sub">Estrutura enviada pelo Guilherme: 34 itens organizados em 11 categorias (9 com subcategorias + 2 categorias sem subcategoria: "Fora de Escopo" e "Gestão da plataforma de Service Desk"), com grupo operador e SLA por subcategoria. <span class="badge done">Configurado no campo Category do FreshService</span></p>
+
+      <div class="callout" style="margin-bottom:18px;">
+        <span>ⓘ</span>
+        <span>SLA sugerido em horário útil (seg–sex, 9h–18h); ajustar conforme a política interna definitiva antes
+        de configurar as políticas de SLA no FreshService.</span>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <tr><th>Categoria</th><th>Subcategoria</th><th>Descrição</th><th>Grupo operador</th><th>SLA</th></tr>
+          <tr><td rowspan="8">Contas e Acessos</td><td>Criação de usuário</td><td>Abertura de conta e acesso inicial</td><td class="tag">TI-N1</td><td class="mono">2 dias</td></tr>
+          <tr><td>Desligamento de usuário</td><td>Desativação de conta e acessos</td><td class="tag">TI-N1</td><td class="mono">4h</td></tr>
+          <tr><td>Reset de senha</td><td>Redefinição de senha</td><td class="tag">TI-N1</td><td class="mono">2h</td></tr>
+          <tr><td>Alteração de acessos e permissões</td><td>Ajuste de permissão por mudança de função</td><td class="tag">TI-N1</td><td class="mono">2 dias</td></tr>
+          <tr><td>Problemas com login ou MFA</td><td>Falha de autenticação/MFA</td><td class="tag">TI-N1</td><td class="mono">2h</td></tr>
+          <tr><td>Consentimento e registro de aplicativos (Azure AD)</td><td>Autorização de app no Azure AD</td><td class="tag">TI-N2</td><td class="mono">2 dias úteis</td></tr>
+          <tr><td>Acesso administrativo elevado</td><td>Permissão admin/PowerShell</td><td class="tag">TI-N2</td><td class="mono">1 dia</td></tr>
+          <tr><td>VPN e acesso remoto</td><td>Liberação de acesso remoto</td><td class="tag">TI-N2</td><td class="mono">1 dia</td></tr>
+
+          <tr><td rowspan="6">Microsoft 365 e Colaboração</td><td>Teams</td><td>Suporte e configuração do Teams</td><td class="tag">TI-N1</td><td class="mono">2 dias</td></tr>
+          <tr><td>Caixa de e-mail compartilhada / lista de distribuição</td><td>Criação/acesso a caixa ou lista</td><td class="tag">TI-N1</td><td class="mono">2 dias</td></tr>
+          <tr><td>Office 365 - aplicativos diversos</td><td>Suporte a Excel, Forms, Loop etc.</td><td class="tag">TI-N1</td><td class="mono">2 dias</td></tr>
+          <tr><td>E-mail (Outlook)</td><td>Suporte ao Outlook pessoal</td><td class="tag">TI-N1</td><td class="mono">2 dias</td></tr>
+          <tr><td>OneDrive</td><td>Suporte a armazenamento/sincronização</td><td class="tag">TI-N1</td><td class="mono">2 dias</td></tr>
+          <tr><td>SharePoint</td><td>Criação/configuração de site</td><td class="tag">TI-N1</td><td class="mono">2 dias</td></tr>
+
+          <tr><td rowspan="5">Equipamentos e Hardware</td><td>Instalação e Configuração de Software</td><td>Instalação/atualização de software</td><td class="tag">TI-N1</td><td class="mono">2 dias</td></tr>
+          <tr><td>Problemas de Hardware</td><td>Defeito físico do equipamento</td><td class="tag">TI-N1</td><td class="mono">1 dia</td></tr>
+          <tr><td>Lentidão / Performance</td><td>Baixo desempenho do equipamento</td><td class="tag">TI-N1</td><td class="mono">1 dia</td></tr>
+          <tr><td>Celular corporativo</td><td>Suporte a celular corporativo</td><td class="tag">TI-N1</td><td class="mono">1 dia</td></tr>
+          <tr><td>Entrega de equipamento (novo colaborador)</td><td>Preparo e entrega de equipamento</td><td class="tag">TI-N1</td><td class="mono">2 dias</td></tr>
+
+          <tr><td rowspan="2">Periféricos e Impressão</td><td>Periféricos</td><td>Mouse, teclado, headset, monitor</td><td class="tag">TI-N1</td><td class="mono">1 dia</td></tr>
+          <tr><td>Impressoras</td><td>Suporte a impressora</td><td class="tag">TI-N1</td><td class="mono">1 dia</td></tr>
+
+          <tr><td rowspan="2">Rede e Infraestrutura</td><td>Links de internet</td><td>Falha ou instalação de link</td><td class="tag">TI-N2</td><td class="mono">4h</td></tr>
+          <tr><td>Wi-Fi corporativo</td><td>Suporte à rede Wi-Fi</td><td class="tag">TI-N1</td><td class="mono">4h</td></tr>
+
+          <tr><td rowspan="3">Software e Licenciamento</td><td>Aplicativos SaaS de terceiros</td><td>Acesso/instalação de app terceiro</td><td class="tag">TI-N1</td><td class="mono">2 dias</td></tr>
+          <tr><td>Certificado digital</td><td>Emissão/renovação de certificado</td><td class="tag">TI-N2</td><td class="mono">1 dia</td></tr>
+          <tr><td>Licenciamento e faturamento</td><td>Nova licença ou conferência de fatura</td><td class="tag">TI-N1</td><td class="mono">2 dias</td></tr>
+
+          <tr><td rowspan="2">Segurança da Informação</td><td>Suspeita de phishing ou incidente de segurança</td><td>Resposta a e-mail/atividade suspeita</td><td class="tag">TI-N2 / Segurança</td><td class="mono">2h</td></tr>
+          <tr><td>Perda/roubo de equipamento</td><td>Bloqueio e reposição de equipamento</td><td class="tag">TI-N2 / Segurança</td><td class="mono">2h</td></tr>
+
+          <tr><td rowspan="3">Suporte Geral de TI</td><td>Dúvida geral de TI</td><td>Dúvida pontual sem categoria própria</td><td class="tag">TI-N1</td><td class="mono">2 dias</td></tr>
+          <tr><td>Levantamento de informações / relatórios</td><td>Extração de dados/relatório ad-hoc</td><td class="tag">TI-N1</td><td class="mono">3 dias</td></tr>
+          <tr><td>Site institucional / conteúdo</td><td>Dúvida sobre o site institucional</td><td class="tag">TI-N1</td><td class="mono">3 dias</td></tr>
+
+          <tr><td rowspan="3">Administrativo e Facilities</td><td>Organização de sala de reunião</td><td>Reserva/apoio de sala</td><td class="tag">Facilities</td><td class="mono">1 dia</td></tr>
+          <tr><td>Organização de estação de trabalho</td><td>Ajuste do posto de trabalho</td><td class="tag">Facilities</td><td class="mono">1 dia</td></tr>
+          <tr><td>Limpeza preventiva de equipamento</td><td>Limpeza física periódica</td><td class="tag">Facilities</td><td class="mono">1 dia</td></tr>
+
+          <tr><td>Fora de Escopo</td><td>N/A</td><td>Chamado fora da responsabilidade de TI</td><td class="tag">N/A</td><td class="mono">N/A</td></tr>
+          <tr><td>Gestão da plataforma de Service Desk</td><td>N/A</td><td>Administração da própria ferramenta</td><td class="tag">TI-N1</td><td class="mono">2 dias</td></tr>
+        </table>
+      </div>
+
+      <p class="section-sub" style="margin-top:14px;">
+        Próximo passo de configuração: transformar cada categoria em um campo de categorização de ticket no
+        FreshService (Categoria → Subcategoria), vincular o "Grupo operador" às regras de atribuição automática,
+        e criar as políticas de SLA correspondentes. Itens que hoje são só categorização (ex: "Criação de usuário",
+        "Entrega de equipamento") também são bons candidatos a virar formulários no Catálogo de Serviços do
+        portal de autoatendimento, com campos próprios e aprovação quando fizer sentido (ex: acesso administrativo
+        elevado exigindo aprovação do gestor).
+      </p>
+    </section>
+
+    <section id="cmdb">
+      <h2>CMDB / Gestão de Ativos <span class="badge done">78 de 86 ativos cadastrados</span></h2>
+      <p class="section-sub">Base construída em cima do export real de ativos do TOPdesk: 78 dos 86 itens já cadastrados no FreshService (piloto + importação em massa de 10/09); faltam as 8 Licenças, tratadas fora do CMDB.</p>
+
+      <h3 style="font-size:15px; margin-bottom:10px;">Inventário atual por tipo</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Tipo</th><th>Quantidade</th><th>Campos usados no TOPdesk</th></tr>
+          <tr><td>Notebook</td><td class="mono">24</td><td>Marca, Modelo, Nº série, Localização, Termo assinado, Garantia, Pessoa vinculada</td></tr>
+          <tr><td>Mouse</td><td class="mono">15</td><td>Marca, Modelo, Nº série, Localização, Pessoa vinculada</td></tr>
+          <tr><td>Headset</td><td class="mono">13</td><td>Marca, Modelo, Nº série, Localização, Pessoa vinculada</td></tr>
+          <tr><td>Teclado</td><td class="mono">13</td><td>Marca, Modelo, Nº série, Localização, Pessoa vinculada</td></tr>
+          <tr><td>Licenças</td><td class="mono">8</td><td>Fornecedor, Tipo de licença, Quantidade, Data de expiração, Conta atribuída</td></tr>
+          <tr><td>Celular</td><td class="mono">6</td><td>Marca, Modelo, Nº série, IMEI 1/2, Pessoa vinculada</td></tr>
+          <tr><td>Monitor</td><td class="mono">6</td><td>Marca, Modelo, Nº série, Service TAG, Termo assinado, Localização, Pessoa vinculada</td></tr>
+          <tr><td>CFTV</td><td class="mono">1</td><td>Marca, Modelo, Nº série, Localização (sem pessoa, ativo de infraestrutura)</td></tr>
+        </table>
+      </div>
+
+      <div class="grid-2" style="margin-top:16px;">
+        <div class="card">
+          <h3>Status a preservar</h3>
+          <p><span class="tag">Em uso</span> 72 · <span class="tag">Em estoque</span> 5 · <span class="tag">Extravio</span> 1 ·
+          8 sem status preenchido</p>
+        </div>
+        <div class="card">
+          <h3>Localização a preservar</h3>
+          <p><span class="tag">Escritório - São Paulo</span> 57 · <span class="tag">Remoto</span> 13 · 16 sem localização preenchida</p>
+        </div>
+      </div>
+
+      <div class="callout" style="margin-top:16px;">
+        <span>ⓘ</span>
+        <span><b>Limpeza antes da importação:</b> 16 ativos sem localização e 8 sem status no export atual; vale
+        preencher isso no TOPdesk (ou corrigir direto na planilha de importação) antes de subir para o FreshService,
+        para não herdar dados incompletos no CMDB novo. O status "Extravio" é bom manter como valor próprio: é
+        informação de segurança patrimonial, não só controle de estoque.</span>
+      </div>
+
+      <h3 style="font-size:15px; margin:22px 0 10px;">Tipos de CI propostos para o FreshService</h3>
+      <div class="grid-3">
+        <div class="card"><h3>Notebook / Monitor</h3><p>Ativos de maior valor, com termo de responsabilidade e garantia.</p></div>
+        <div class="card"><h3>Periféricos</h3><p>Mouse, teclado, headset: ativos de baixo valor, controle simples.</p></div>
+        <div class="card"><h3>Celular corporativo</h3><p>Inclui IMEI 1/2 como campos próprios.</p></div>
+        <div class="card"><h3>Licença de software</h3><p>Melhor modelada no módulo de Software/Licenças do FreshService do que como CI genérico, já que traz campos de quantidade, validade e uso.</p></div>
+        <div class="card"><h3>Infraestrutura</h3><p>CFTV e demais ativos sem pessoa vinculada, apenas localização.</p></div>
+      </div>
+
+      <h3 style="font-size:15px; margin:22px 0 10px;">Módulo real do FreshService: ITAM (Devices × Physical Assets)</h3>
+      <p>A instância real (<span class="tag">Ativos → Inventário</span>) usa o módulo mais novo de Gestão de Ativos de TI
+      (ITAM), que substitui o antigo conceito único de "Tipos de Ativo" por categorias separadas na barra lateral:
+      <b>Dispositivos (Devices)</b>, <b>Ativos Físicos (Physical Assets)</b>, Recursos e Redes. Isso mudou como o
+      inventário real é cadastrado, em relação ao plano genérico acima:</p>
+      <div class="table-wrap" style="margin-top:10px;">
+        <table>
+          <tr><th>Categoria ITAM</th><th>Para que serve</th><th>Uso neste projeto</th></tr>
+          <tr><td><b>Dispositivos</b></td><td>Computadores "enxergados" via agente/rede (IP, softwares instalados,
+          logins). Requer instalar um agente de descoberta (Asset Discovery) na rede.</td><td>Não usado por enquanto:
+          nenhum agente de descoberta está instalado hoje.</td></tr>
+          <tr><td><b>Ativos Físicos</b></td><td>Cadastro manual simples, tipo ficha, sem depender de agente. Já traz
+          tipos prontos para vários periféricos.</td><td><b>Escolhido para os 86 ativos do inventário</b>, incluindo
+          o Notebook (via tipo personalizado, ver abaixo).</td></tr>
+        </table>
+      </div>
+      <div class="callout" style="margin-top:14px;">
+        <span>ⓘ</span>
+        <span><b>Descoberta de ativos já incluída no plano:</b> pesquisado nas páginas oficiais de preços da
+        Freshworks: a funcionalidade "Asset discovery" já vem inclusa em qualquer plano Freshservice (inclusive o
+        Enterprise em avaliação da Vantris), dentro do pacote "ITAM Growth" + 100 Asset Units, sem custo adicional
+        para o volume atual (86 ativos). Ou seja, <b>é possível no futuro instalar o agente de descoberta nos
+        notebooks</b> para que o FreshService passe a enxergá-los automaticamente (IP, software instalado etc.), mas
+        isso é uma configuração de rede à parte, ainda não feita. Por isso o tipo "Notebook" já foi criado com a
+        opção "Relação de Dispositivo Ativo" ligada (ver ficha abaixo), deixando o caminho aberto para associar cada
+        Ativo Físico a um Dispositivo descoberto mais tarde, sem precisar recadastrar nada.</span>
+      </div>
+
+      <div class="config-card" style="margin-top:16px;">
+        <h3>Tipo de Ativo Físico criado: "Notebook"</h3>
+        <p class="section-sub">Ativos → Inventário → Ativos Físicos → Adicionar Ativo → campo "Tipo" → + Add your first Asset type</p>
+        <div class="field-grid">
+          <div><b>Nome</b></div><div>Notebook</div>
+          <div><b>Relação de Dispositivo Ativo</b></div><div><b>Ligado.</b> Permite associar este Ativo Físico a um
+          Dispositivo (Device) do FreshService: é o campo que deixa o caminho aberto para o agente de descoberta
+          mencionado acima, sem exigir nada agora.</div>
+          <div><b>Opções de localização exibidas</b></div><div>"Edifício" ligado (mesmo nível de localização já usado
+          no restante do inventário); "Sala de Armazenamento", "Sala de servidores" e "Gaveta" deixados desligados, pois
+          fazem mais sentido para ativos de infraestrutura de datacenter do que para notebooks de colaborador.</div>
+        </div>
+      </div>
+      <p style="margin-top:10px;">Os demais tipos já existem prontos em Ativos Físicos e serão reaproveitados como
+      estão, sem necessidade de criar nada: <span class="tag">Mouse</span> → Mouse, <span class="tag">Headset</span> →
+      Headset, <span class="tag">Teclado</span> → Keyboard, <span class="tag">Monitor</span> → Monitor,
+      <span class="tag">Celular</span> → Phone, <span class="tag">CFTV</span> → Camera. Licenças de software continuam
+      fora do CMDB, tratadas no módulo próprio de Software/Licenças.</p>
+
+      <h3 style="font-size:15px; margin:22px 0 10px;">Campo Personalizado de Ativo: "Termo assinado"</h3>
+      <p class="section-sub">Admin → Campos Personalizados → Activo → Adicionar Asset custom field</p>
+      <div class="config-card">
+        <div class="field-grid">
+          <div><b>Campo</b></div><div>Termo assinado</div>
+          <div><b>Tipo</b></div><div>Sim/Não</div>
+          <div><b>Filtrável</b></div><div>Ligado, permite depois filtrar/relatar quais ativos ainda estão sem o termo
+          assinado.</div>
+          <div><b>Obrigatório</b></div><div>Desligado.</div>
+          <div><b>Para que serve</b></div><div>É o documento que cada colaborador assina
+          relacionando todos os ativos da empresa em sua posse. Modelado como Sim/Não por ativo (mesma granularidade
+          do TOPdesk) em vez de anexo de arquivo, para permitir filtrar rapidamente quem está com termo pendente;
+          o PDF assinado em si pode ser anexado depois em "File Attachments" do próprio ativo, se necessário.</div>
+        </div>
+        <p style="margin-top:10px; font-size:13px; color:var(--ink-faint);">Esse campo é global de Activo: aparece
+        no formulário de qualquer tipo (Notebook, Monitor, Mouse etc.), não só do Notebook.</p>
+      </div>
+
+      <h3 style="font-size:15px; margin:22px 0 10px;">Primeiro ativo real cadastrado (piloto)</h3>
+      <p>Para aprender o formulário, foi cadastrado ao vivo o notebook <b>ID 00001</b> do export TOPdesk (Dell Inspiron
+      15 3530, Bianca Torres) como piloto. Ficha final:</p>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Campo</th><th>Valor</th></tr>
+          <tr><td>Nome</td><td>Notebook - Bianca Torres</td></tr>
+          <tr><td>Estado</td><td>Em utilização (= "Em uso" no TOPdesk)</td></tr>
+          <tr><td>Tipo</td><td>Notebook</td></tr>
+          <tr><td>Managed By Group</td><td>N1</td></tr>
+          <tr><td>Número de Série</td><td class="mono">7LQ17F4</td></tr>
+          <tr><td>Ativo #</td><td class="mono">TD-00001 (prefixo "TD-" preserva o ID antigo do TOPdesk sem colidir com a numeração nativa)</td></tr>
+          <tr><td>Fabricante</td><td>Dell (criado agora, primeiro fabricante cadastrado)</td></tr>
+          <tr><td>Edifício</td><td>Escritório - São Paulo (criado agora, primeiro prédio cadastrado)</td></tr>
+          <tr><td>Termo assinado</td><td>Sim</td></tr>
+          <tr><td>Used By</td><td><i>Não preenchido</i> (ver pendência abaixo)</td></tr>
+        </table>
+      </div>
+      <div class="callout" style="margin-top:14px;">
+        <span>ⓘ</span>
+        <span><b>Pendência: Solicitantes ainda não existem.</b> Ao tentar preencher "Used By" com "Bianca Torres", o
+        FreshService não encontrou ninguém: as pessoas reais da Vantris ainda não foram cadastradas/importadas como
+        Solicitantes. Isso bloqueia esse campo para os 86 ativos até essa importação ser feita; adicionado aos
+        Próximos Passos.</span>
+      </div>
+      <p style="margin-top:10px;">Descobertas úteis durante o cadastro: o campo nativo <b>"Estado"</b> do FreshService
+      já tem a opção <b>"Missing"</b>, que mapeia direto para o status "Extravio" do TOPdesk; não será preciso criar
+      um campo personalizado "Extraviado" como o plano original previa. O campo <b>"Discovery Sources"</b> do ativo
+      mostrou "Guilherme Silva" após salvar, confirmando que o registro foi criado manualmente (é esse mesmo campo
+      que passaria a citar o agente de descoberta, caso um dia seja instalado).</p>
+
+      <h3 style="font-size:15px; margin:22px 0 10px;">Importação em massa dos 77 ativos restantes (10/09/2026)</h3>
+      <p>Com o piloto validado, os demais 77 ativos físicos (todos os tipos exceto Licenças, que ficam fora do CMDB)
+      foram cadastrados de uma vez via <b>importação em massa nativa do FreshService</b>: Ativos Físicos → menu "⋮" →
+      Importar → Importar Ativos, que fornece um modelo XLSX de download com 36 colunas e aceita upload de um
+      arquivo preenchido. Duas descobertas de formato bloquearam as duas primeiras tentativas e tiveram que ser
+      corrigidas antes da importação real ter sucesso:</p>
+      <div class="table-wrap" style="margin-top:10px;">
+        <table>
+          <tr><th>Tentativa</th><th>Erro retornado</th><th>Causa raiz</th><th>Correção</th></tr>
+          <tr><td>1ª (teste com 2 ativos)</td><td class="mono">"Manufacturer not found"</td><td>Nenhum Fabricante
+          existia ainda no sistema: a importação exige que o valor da coluna <span class="mono">manufacturer</span>
+          bata exatamente com um Fabricante já cadastrado, não cria um novo automaticamente.</td><td>Criados
+          manualmente 6 Fabricantes (Ativo → campo Fabricante → "+ Add"): <b>Logitech, Lenovo, Dell, Apple, Samsung,
+          Intelbras</b>, os mesmos 6 já usados no export do TOPdesk.</td></tr>
+          <tr><td>2ª (teste com 2 ativos)</td><td class="mono">"Invalid value for state. Valid choices are: In
+          Use, Missing, In Transit, In Stock, Retired, Reserved, Disposed"</td><td>A coluna <span class="mono">state</span>
+          exige o valor interno em inglês, não o rótulo em PT-BR mostrado na tela (ex.: "Em utilização" não é
+          aceito).</td><td>Arquivo reconstruído usando os valores internos em inglês; ver tabela de mapeamento
+          abaixo.</td></tr>
+          <tr><td>3ª (teste com 2 ativos)</td><td>Nenhum</td><td>Nenhuma</td><td><b>Sucesso: Total 2, Criados 2, Falhas 0.</b>
+          Pipeline validado; os 2 ativos de teste foram apagados antes de rodar o lote real, para não duplicar.</td></tr>
+        </table>
+      </div>
+
+      <h4 style="font-size:13px; margin:16px 0 8px;">Mapeamento TOPdesk → FreshService usado no arquivo de importação</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Campo</th><th>Regra aplicada</th></tr>
+          <tr><td><b>Tipo</b></td><td>Notebook→Notebook, Mouse→Mouse, Headset→Headset, Teclado→Keyboard,
+          Monitor→Monitor, Celular→Phone, CFTV→Camera (valor do TOPdesk vinha com espaço sobrando, "CFTV ",
+          removido antes do mapeamento)</td></tr>
+          <tr><td><b>Estado</b></td><td>Em uso→In Use, Em estoque→In Stock, Extravio→Missing (valor interno em
+          inglês exigido pela importação, ver tabela de erros acima)</td></tr>
+          <tr><td><b>Fabricante</b></td><td>Marca do TOPdesk repassada como está (Dell, Lenovo, Apple, Samsung,
+          Logitech, Intelbras), todos os 6 já existiam como Fabricante antes do lote real rodar</td></tr>
+          <tr><td><b>Nome</b></td><td>"{Tipo} - {Pessoa}" quando há alguém em "Tarefa - Pessoas"; senão "{Tipo} -
+          Estoque ({nº série ou ID do Ativo})"</td></tr>
+          <tr><td><b>Activo # / Número de Série</b></td><td>Activo # = "TD-{ID do Ativo do TOPdesk}" (preserva o ID
+          antigo para rastreabilidade); Número de Série = valor do TOPdesk sem alteração</td></tr>
+          <tr><td><b>Managed By Group / Impacto / Usage Type</b></td><td>N1 / Low / Permanent para todos, mesmos
+          valores padrão definidos no ativo piloto</td></tr>
+        </table>
+      </div>
+      <p style="margin-top:10px;">O notebook piloto (ID 00001, Bianca Torres, já cadastrado manualmente em 10/09)
+      foi excluído do lote para não duplicar.</p>
+
+      <div class="callout" style="margin-top:14px;">
+        <span>ⓘ</span>
+        <span><b>Resultado final da importação em massa:</b> Total <b>77</b>, Criados <b>77</b>, Atualizados
+        <b>0</b>, Falhas <b>0</b>. Contagem por tipo conferida na lista de Ativos e batendo exatamente com o export
+        do TOPdesk (excluindo Licenças e o piloto): Notebook 23, Mouse 15, Headset 13, Teclado/Keyboard 13, Celular/Phone 6,
+        Monitor 6, CFTV/Camera 1 = 77. Somado ao piloto, o CMDB tem hoje <b>78 Ativos</b> no total.</span>
+      </div>
+      <p style="margin-top:10px; font-size:13px; color:var(--ink-faint);">Pendência que a importação em massa não
+      resolve: o campo personalizado "Termo assinado" não existe como coluna no modelo de importação, então precisa
+      ser marcado manualmente (ou via edição em massa na própria lista) para os Notebooks e Monitores que já têm o
+      termo assinado no TOPdesk; ainda não feito, ver Próximos Passos.</p>
+
+      <h3 style="font-size:15px; margin:22px 0 10px;">Integração com Microsoft Entra ID (Azure AD): importação automática de Solicitantes</h3>
+      <p class="section-sub">Avaliada a possibilidade de conectar o FreshService à base de usuários da Microsoft
+      e puxar todo mundo automaticamente: <b>sim</b>, é possível, e resolve diretamente a pendência de Solicitantes
+      acima. Confirmado ao vivo no Marketplace de apps da própria conta (Admin → Aplicações →
+      "Aplicações"/Marketplace, busca por "Azure AD").</p>
+      <div class="config-card">
+        <div class="field-grid">
+          <div><b>Azure active directory provisioning (SCIM)</b></div><div>App gratuito, selo "Verified by
+          Freshworks", nota 4.3 (400+ avaliações), 7.300+ instalações, versão 3.0. Cria e atualiza automaticamente os
+          usuários no FreshService a partir do Azure AD via protocolo SCIM (o mesmo padrão usado por Microsoft/Okta
+          para provisionamento automático de contas). Instalação "Account-wide" (vale para toda a conta).</div>
+          <div><b>Pré-requisitos (lado FreshService)</b></div><div>Domínio da conta (vantrisholding.freshservice.com)
+          e uma API key do FreshService, obtida em Definições de Perfil, exige que quem gerar seja um Administrador
+          da Organização (Org Administrator). O restante da configuração é feito do lado do Azure AD/Entra ID
+          (registro do app de provisionamento e ativação do SCIM), fora do FreshService.</div>
+          <div><b>Microsoft Azure Entra (AD) Group Sync</b></div><div>App complementar, também no Marketplace:
+          sincroniza usuários do Azure AD para o FreshService em tempo real, voltado a Grupos de Agentes; mais
+          indicado para manter grupos de <i>agentes</i> alinhados com grupos do Entra ID do que para importar a
+          massa de Solicitantes.</div>
+          <div><b>Azure AD - Orch</b></div><div>App de orquestração/workflow (gratuito, 4.3★, 3.800+ instalações):
+          permite executar ações no Azure AD a partir de Workflows do FreshService e acompanhar apps/usuários/uso;
+          útil para automações pontuais, não é o caminho principal para a importação em massa.</div>
+        </div>
+        <p style="margin-top:10px; font-size:13px; color:var(--ink-faint);">Ainda não instalado nem configurado;
+        este é o caminho recomendado para resolver a pendência de Solicitantes, mas a configuração do lado do Azure
+        AD (registro do app enterprise, endpoint/token SCIM) precisa ser feita em sessão dedicada, de preferência
+        testando primeiro com um grupo pequeno de usuários antes de sincronizar a base inteira.</p>
+      </div>
+
+      <h3 style="font-size:15px; margin:22px 0 10px;">Mapeamento de campos TOPdesk → FreshService</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Campo no TOPdesk</th><th>Campo no FreshService</th></tr>
+          <tr><td class="mono">Tipo</td><td>Asset Type</td></tr>
+          <tr><td class="mono">ID do Ativo</td><td>Display ID / Asset Tag</td></tr>
+          <tr><td class="mono">Marca / Modelo</td><td>Manufacturer / Product</td></tr>
+          <tr><td class="mono">Numero serial / Service TAG</td><td>Serial Number / Asset Tag</td></tr>
+          <tr><td class="mono">Status</td><td>Asset State (Em uso → In Use, Em estoque → In Stock, Extravio → campo customizado "Extraviado")</td></tr>
+          <tr><td class="mono">Localização</td><td>Location</td></tr>
+          <tr><td class="mono">Tarefa - Pessoas / Conta atribuída</td><td>Relacionamento "Used by" (Requester)</td></tr>
+          <tr><td class="mono">Data de aquisição / entrega / Garantia</td><td>Acquisition Date / Warranty</td></tr>
+          <tr><td class="mono">Termo assinado / IMEI 1 / IMEI 2</td><td>Campos customizados no tipo de CI</td></tr>
+        </table>
+      </div>
+
+      <h3 style="font-size:15px; margin:22px 0 10px;">Relacionamentos principais</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>De</th><th>Relação</th><th>Para</th></tr>
+          <tr><td>Colaborador</td><td>usa</td><td>Notebook / Monitor / Periférico / Celular</td></tr>
+          <tr><td>Colaborador</td><td>possui licença</td><td>Licença de software</td></tr>
+          <tr><td>Ativo</td><td>localizado em</td><td>Escritório São Paulo / Remoto</td></tr>
+        </table>
+      </div>
+
+      <div class="callout accent" style="margin-top:18px;">
+        <span>→</span>
+        <span><b>Aproveitamento:</b> o agente de análise de ambiente Microsoft (Python + Graph API) já existente
+        pode complementar este inventário com o que o TOPdesk não cobre (dispositivos Intune, licenças M365 por
+        usuário), evitando cadastro manual dessa parte também.</span>
+      </div>
+    </section>
+
+    <section id="change-problem">
+      <h2>Change &amp; Problem Management <span class="badge pend">Proposta inicial</span></h2>
+      <p class="section-sub">Somente disponível a partir do plano Pro; ver seção de planos.</p>
+
+      <h3 style="font-size:15px; margin-bottom:10px;">Tipos de mudança</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Tipo</th><th>Quando usar</th><th>Aprovação</th></tr>
+          <tr><td><b>Padrão</b></td><td>Pré-aprovada, baixo risco, repetitiva (ex: troca de notebook)</td><td>Automática</td></tr>
+          <tr><td><b>Normal</b></td><td>Planejada, risco moderado (ex: atualização de política Intune)</td><td>Gestor / CAB leve</td></tr>
+          <tr><td><b>Emergencial</b></td><td>Correção urgente de incidente crítico</td><td>Retroativa, pós-implementação</td></tr>
+        </table>
+      </div>
+
+      <p class="section-sub" style="margin-top:14px;">
+        Dado o tamanho do time, um CAB (Change Advisory Board) formal provavelmente não se justifica no início;
+        a proposta é aprovação pelo gestor direto (Eduardo Ramos) para mudanças normais, com revisão em conjunto apenas
+        para emergenciais. Problem Management deve nascer vinculado a incidentes recorrentes identificados nos
+        relatórios (ex: mesma categoria/CI reincidente).
+      </p>
+    </section>
+
+    <section id="migracao">
+      <h2>Migração do TOPdesk <span class="badge pend">A planejar em detalhe</span></h2>
+      <p class="section-sub">Substituição total: plano de corte em fases para não perder histórico nem SLA em andamento.</p>
+      <ol class="steps">
+        <li>
+          <div class="n">1</div>
+          <div class="step-body"><b>Configuração paralela</b><span>Estruturar o FreshService (categorias, SLAs, catálogo, CMDB) enquanto o TOPdesk continua operando normalmente.</span></div>
+        </li>
+        <li>
+          <div class="n">2</div>
+          <div class="step-body"><b>Importação de dados de referência</b><span>Migrar cadastro de usuários, ativos e, se possível, histórico recente de tickets para consulta.</span></div>
+        </li>
+        <li>
+          <div class="n">3</div>
+          <div class="step-body"><b>Piloto interno</b><span>Rodar o Service Desk no FreshService com um subconjunto de solicitantes/tickets antes do corte total.</span></div>
+        </li>
+        <li>
+          <div class="n">4</div>
+          <div class="step-body"><b>Corte oficial &amp; comunicação</b><span>Anunciar a data de virada para todos os usuários, redirecionar canais de abertura (e-mail, portal).</span></div>
+        </li>
+        <li>
+          <div class="n">5</div>
+          <div class="step-body"><b>Desativação do TOPdesk</b><span>Exportar histórico final para arquivo (auditoria/compliance) antes de encerrar a licença.</span></div>
+        </li>
+      </ol>
+    </section>
+
+    <section id="metricas">
+      <h2>Métricas de relatório a preservar <span class="badge wip">Mapeamento em andamento</span></h2>
+      <p class="section-sub">O workbook mensal atual tem regras de negócio específicas; precisam de um equivalente no FreshService.</p>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Métrica no TOPdesk</th><th>Regra de negócio</th><th>Equivalente no FreshService</th></tr>
+          <tr><td>First Call Resolution</td><td>Fechado em até 120 min da abertura</td><td>Regra customizada via campo de data + automação, ou relatório de "Resolution Time"</td></tr>
+          <tr><td>Backlog</td><td>Fechado(a)s = FALSE</td><td>Filtro de status "Aberto/Pendente" nos relatórios</td></tr>
+          <tr><td>Tempo de processamento ajustado</td><td>Métrica de SLA usada nos relatórios</td><td>SLA "Resolution Due" / tempo de resolução líquido</td></tr>
+          <tr><td>Canal de abertura</td><td>Origem do ticket</td><td>Campo "Source" nativo</td></tr>
+          <tr><td>Volume por grupo solucionador</td><td>Agrupamento por equipe</td><td>Campo "Group" + relatórios por grupo</td></tr>
+          <tr><td>Top usuários</td><td>Solicitantes com mais chamados</td><td>Relatório por "Requester"</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section id="proximos-passos">
+      <h2>Próximos passos <span class="badge pend">Pendente</span></h2>
+      <ul class="checklist">
+        <li><span class="box" style="background:var(--good); border-color:var(--good);"></span><s>Confirmar ativação do login de Guilherme com o novo e-mail guilherme.silva@novapay.com.br</s>: <b>concluído em 15/09/2026</b> (ver <a href="#config-realizada">Acesso e Segurança</a>)</li>
+        <li><span class="box" style="background:var(--good); border-color:var(--good);"></span><s>Renomear a conta FreshService de "Vantris Holding" para "novapay"</s>: <b>concluído em 15/09/2026</b> (ver <a href="#config-realizada">Acesso e Segurança</a>)</li>
+        <li><span class="box" style="background:var(--good); border-color:var(--good);"></span><s>Atualizar o e-mail de contato principal da conta para @novapay.com.br</s>: <b>concluído em 15/09/2026</b> (ver <a href="#config-realizada">Acesso e Segurança</a>)</li>
+        <li><span class="box" style="background:var(--good); border-color:var(--good);"></span><s>Trocar o subdomínio de vantrisholding.freshservice.com para algo com "novapay"</s> <b>concluído em 18/09/2026:</b> a ferramenta de autoatendimento fica em Portais → Definições do portal → Definições gerais. O nome exato "novapay" já estava em uso por outra conta Freshservice, então o subdomínio final ficou em <b>novapay-service.freshservice.com</b>. Detalhes em <a href="#config-realizada">Registro de Configuração Realizada, Troca de subdomínio</a></li>
+        <li><span class="box"></span>Guilherme: continuar os testes inserindo manualmente alguns usuários como Solicitantes enquanto aguarda esclarecimento sobre a integração com a Microsoft (ação da reunião com a Prisma Consultoria, 17/09/2026); relacionado à pendência de SCIM/Azure AD, que segue pausada</li>
+        <li><span class="box"></span>Aguardar a Prisma Consultoria (Rafael Costa) consultar diretamente a IFAI (fornecedora da integração usada pelo app SCIM) para confirmar se a integração com a Microsoft apenas provisiona usuários ou também retém dados (preocupação de segurança levantada pelo Guilherme na reunião de 17/09/2026)</li>
+        <li><span class="box"></span>Confirmar se um chamado aberto no FreshDesk e encaminhado ao FreshService mantém a mesma numeração ou vira um novo ticket correlacionado: a Prisma Consultoria explicou que a integração nativa abre um incidente no Service a partir do chamado do Desk "mantendo a correlação entre os registros", mas não ficou claro se é o mesmo número ou um ticket novo vinculado</li>
+        <li><span class="box" style="background:var(--good); border-color:var(--good);"></span><s>Conectar servicedesk@novapay.com.br como caixa de e-mail do service desk no FreshService</s>: <b>concluído em 18/09/2026</b> via Microsoft Outlook/OAuth Graph API, grupo N1, com Acesso Total confirmado no Microsoft 365 (ver <a href="#config-realizada">Registro de Configuração Realizada, Canais de e-mail</a>)</li>
+        <li><span class="box" style="background:var(--warn); border-color:var(--warn);"></span><b>⚠ Atenção — novo prazo 29/09/2026:</b> confirmar plano definitivo (Pro x Enterprise); o trial era de 14 dias a partir de 09/09/2026 (venceria em 23/09/2026), com prazo estendido até <b>29/09/2026</b>. <b>Decisão de 18/09/2026:</b> será discutido internamente pela gestão no momento da aquisição. Confirmar a decisão até o novo prazo, antes que algo configurado (Change/Problem Management, por exemplo) suma do ambiente</li>
+        <li><span class="box"></span>Confirmar com a gestão o horário útil de referência do SLA (a planilha assume seg–sex, 9h–18h) antes de configurar as políticas no FreshService</li>
+        <li><span class="box"></span>Definir número de agentes/licenças necessárias</li>
+        <li><span class="box"></span>Sessão de configuração assistida no portal do FreshService (via navegador)</li>
+        <li><span class="box" style="background:var(--good); border-color:var(--good);"></span><s>Cadastrar/importar os demais 85 de 86 ativos do export TOPdesk em Ativos Físicos</s>: <b>concluído em 10/09/2026</b> via importação em massa nativa (77 ativos criados, 0 falhas; ver <a href="#cmdb">CMDB / Gestão de Ativos</a>). Restam apenas as 8 Licenças, que ficam fora do CMDB (módulo próprio de Software/Licenças)</li>
+        <li><span class="box"></span>Marcar o campo personalizado "Termo assinado" para os Notebooks e Monitores que já têm termo assinado no TOPdesk; não é uma coluna do modelo de importação em massa, precisa de edição manual/em massa à parte (ver <a href="#cmdb">CMDB / Gestão de Ativos</a>). <b>Decisão de 18/09/2026:</b> Guilherme vai fazer isso com calma depois (envolve imprimir/coletar termos assinados dos usuários), mas não é uma tarefa ativa desta lista por ora; o essencial (os ativos estarem cadastrados no Freshservice) já está feito</li>
+        <li><span class="box"></span>Importar/cadastrar as pessoas reais como Solicitantes no FreshService; sem isso, o campo "Used By" dos ativos (equivalente a "Tarefa - Pessoas" do TOPdesk) não pode ser preenchido para ninguém. Caminho identificado em 10/09: app gratuito "Azure active directory provisioning (SCIM)" no Marketplace do FreshService (ver <a href="#cmdb">CMDB / Gestão de Ativos</a>). <b>Retomado em 22/09/2026</b>, junto com o SSO: instalação do app (Authorize/Install) iniciada, mas pausada no meio para priorizar a configuração do SSO primeiro (concluída, ver <a href="#config-realizada">Acesso e Segurança</a>); falta concluir a instalação, configurar o lado do Azure AD (tenant URL + secret token) e testar com um grupo pequeno antes da sincronização completa</li>
+        <li><span class="box"></span>Validar matriz de SLA com o gestor</li>
+        <li><span class="box" style="background:var(--good); border-color:var(--good);"></span><s>Vincular o Grupo operador de cada subcategoria a uma regra de atribuição automática (Business Rules/Workflow Automator)</s>: <b>concluído em 10/09/2026</b>, com simplificação: todas as categorias → Grupo N1 por enquanto (ver <a href="#config-realizada">Atribuição Automática de Tickets</a>)</li>
+        <li><span class="box"></span>Planejar e configurar um catálogo de serviços separado para itens de <b>N2/N3</b>, com roteamento mais granular por grupo operador (decisão de 10/09, a ser feito em sessão futura)</li>
+        <li><span class="box"></span>Decidir tratamento definitivo para "Gestão da plataforma de Service Desk" (categoria sem subcategoria, hoje cai na SLA Default em vez do prazo fixo de 2 dias do catálogo)</li>
+        <li><span class="box" style="background:var(--good); border-color:var(--good);"></span><s>Decidir se a pergunta de texto livre e os textos fixos da pesquisa de satisfação (CSAT) também serão traduzidos para PT-BR</s>: <b>concluído em 23/09/2026</b> — pesquisa 100% em português, reduzida a 2 perguntas (pergunta de texto livre removida), logo da NovaPay, pesquisa e acionador renomeados; NPS nativa revisada e mantida desativada (ver <a href="#csat">Pesquisa de Satisfação (CSAT)</a>)</li>
+        <li><span class="box"></span>Marcar solicitantes VIP quando a plataforma estiver em operação (campo "Marcar como VIP" já existe em Solicitantes → Editar; decisão de 10/09 de deixar para depois do go-live); avaliar também ativar/adaptar o fluxo de exemplo "Prioritize VIP tickets" do Workflow Automator, hoje desativado</li>
+        <li><span class="box"></span>Planejar comunicado de virada para os usuários finais</li>
+        <li><span class="box" style="background:var(--good); border-color:var(--good);"></span><s>Restringir quem pode registrar-se/criar ticket aos domínios da empresa</s>, <b>concluído em 10/09/2026</b>: apenas @vantrisholding.com.br e @novapay.com.br (ver <a href="#config-realizada">Acesso e Segurança</a>)</li>
+        <li><span class="box" style="background:var(--good); border-color:var(--good);"></span><s>Desativar SSO do Google no login (empresa usa Microsoft 365)</s>: <b>concluído em 10/09/2026</b>, ao nível da conta Freshworks (ver <a href="#config-realizada">Acesso e Segurança</a>)</li>
+        <li><span class="box" style="background:var(--good); border-color:var(--good);"></span><s>Configurar login Microsoft/Entra real via SSO (SAML)</s>: <b>concluído em 22/09/2026</b>, testado com sucesso (ver <a href="#config-realizada">Acesso e Segurança, Login via SSO com Microsoft Entra ID</a>)</li>
+        <li><span class="box"></span>Analisar a resposta do suporte da Freshworks ao e-mail de due diligence sobre o app SCIM (endpoint/effy, DPA, plano nativo, alternativa SAML+JIT) e então decidir o formato final de integração com o Azure AD</li>
+        <li><span class="box" style="background:var(--good); border-color:var(--good);"></span><s>Revisar item a item o "Guia de onboarding" nativo do FreshService (/a/onboarding)</s>, <b>concluído em 18/09/2026:</b> o próprio Guilherme encontrou a página (não estava acessível por busca nem link direto anteriormente, provavelmente exige clicar em "Configurar e explorar" no topo da tela, que abre esse guia numa aba própria). Conteúdo revisado item a item; ver detalhamento completo em <a href="#config-realizada">Registro de Configuração Realizada, Guia de onboarding nativo</a></li>
+        <li><span class="box" style="background:var(--good); border-color:var(--good);"></span><s>Continuar a configuração dos campos/formulário de ticket no Field Manager (Campos de tickets) além de Categoria (Grupo, Agente, Departamento, Prioridade) e a seção condicional de Incidente Grave</s>, <b>concluído em 18/09/2026</b>: rótulos de portal traduzidos para PT-BR, Grupo obrigatório ao fechar, e os 4 campos de Incidente Grave obrigatórios ao enviar (ver <a href="#config-realizada">Registro de Configuração Realizada</a>)</li>
+        <li><span class="box" style="background:var(--good); border-color:var(--good);"></span><s>Conectar ouvidoria@novapay.com.br como caixa de e-mail, encaminhando ao grupo Ouvidoria</s>: <b>concluído em 18/09/2026</b> via Microsoft Outlook/OAuth Graph API, com Acesso Total confirmado por Guilherme (ver <a href="#config-realizada">Registro de Configuração Realizada, Canais de e-mail</a>)</li>
+      </ul>
+    </section>
+
+    <section id="log">
+      <h2>Log de decisões</h2>
+      <div class="card">
+        <div class="changelog-item">
+          <time>09/09/2026</time>
+          <div>Escopo definido: substituição total do TOPdesk; prioridade nos 4 módulos (Service Desk, Catálogo,
+          CMDB, Change/Problem); documentação mantida como este documento vivo. Trial "experimente grátis" já
+          aberto pelo Guilherme.</div>
+        </div>
+        <div class="changelog-item">
+          <time>09/09/2026</time>
+          <div>Catálogo de Serviços definido a partir de planilha real enviada pelo Guilherme (34 itens, 10
+          categorias, grupos operadores TI-N1/TI-N2/Segurança/Facilities e SLA por subcategoria). Seção de
+          Service Desk atualizada para referenciar essa taxonomia como categorização oficial de ticket.</div>
+        </div>
+        <div class="changelog-item">
+          <time>09/09/2026</time>
+          <div>CMDB atualizada com o export real de ativos do TOPdesk (86 itens: Notebook, Mouse, Headset, Teclado,
+          Licenças, Celular, Monitor, CFTV). Definidos tipos de CI, mapeamento de campos TOPdesk → FreshService e
+          relacionamentos. Identificada pendência de limpeza de dados (16 ativos sem localização, 8 sem status)
+          antes da importação.</div>
+        </div>
+        <div class="changelog-item">
+          <time>09/09/2026</time>
+          <div>Início da configuração real no FreshService (Admin → Agent Groups): criados os grupos N1, N2, N3 e
+          Segurança (sem Facilities, conforme decisão registrada). Grupos de exemplo do template mantidos por
+          ora. Criada a skill "freshservice-itsm-expert" para consolidar o conhecimento de plataforma e as decisões
+          já tomadas para a Vantris/NovaPay.</div>
+        </div>
+        <div class="changelog-item">
+          <time>09/09/2026</time>
+          <div>Horário Comercial configurado no calendário "Default": Seg-Sex 9h-18h, sábado/domingo off. Lista de
+          feriados dos EUA (padrão do trial) removida e substituída pelo preset "Holidays in Brazil" via Import
+          Holidays (9 feriados americanos excluídos um a um). Fuso horário da conta corrigido de "Eastern Time (US
+          &amp; Canada)" para "Brasília" (Admin → Service Desk Settings), o que exigiu preencher o campo obrigatório
+          de admin para notificações (Guilherme Silva). Confirmado que datas customizadas (emendas/recessos) podem
+          ser adicionadas na mesma lista de feriados, por nome + data; nenhuma criada ainda.</div>
+        </div>
+        <div class="changelog-item">
+          <time>09/09/2026</time>
+          <div>Revisados os 14 grupos de exemplo do template do FreshService (nenhum tinha horário, agentes,
+          restrição ou automação configurados) e todos excluídos (Admin → Agent Groups). Criado o grupo
+          <b>Ouvidoria</b> (Função de negócio: Legal) para reclamações, denúncias, sugestões e feedback. A conta
+          ficou com 5 grupos operadores: N1, N2, N3, Ouvidoria e Segurança.</div>
+        </div>
+        <div class="changelog-item">
+          <time>09/09/2026</time>
+          <div>Campo de ticket <b>Category</b> configurado (Field Manager → Ticket Fields → Manage Category) com a
+          taxonomia real do Catálogo de Serviços: 11 categorias / 34 subcategorias, incluindo as duas categorias
+          sem subcategoria ("Fora de Escopo" e "Gestão da plataforma de Service Desk", decisão confirmada em 09/09).
+          Populado manualmente após a ferramenta de edição em massa ter corrompido a associação
+          categoria↔subcategoria em dois testes (subcategorias novas ficavam ligadas, por posição, às categorias
+          antigas do template). Excluídas as 23 categorias de exemplo do trial; estrutura conferida via
+          "Pré-visualização" antes e depois do Salvar. Próximo passo: matriz de prioridade e políticas de SLA.</div>
+        </div>
+        <div class="changelog-item">
+          <time>09/09/2026</time>
+          <div>Revisada a <b>Matriz de Prioridade</b> (Admin → Priority Matrix): já vinha ativada com os valores
+          nativos do FreshService, mantida sem alterações (decisão de manter o padrão, mesmo com 2 células divergentes da
+          proposta anterior deste documento). Esclarecido e documentado o motivo de existirem dois mecanismos de
+          SLA em paralelo: fixo por categoria (Solicitação de Serviço) e calculado por Prioridade via Impacto ×
+          Urgência (Incidente). Impacto/Urgência seguem de preenchimento manual por chamado; anotada a possibilidade
+          de automatizar esse preenchimento por categoria via Business Rule/Workflow Automator no futuro.</div>
+        </div>
+        <div class="changelog-item">
+          <time>09/09/2026</time>
+          <div>Configuradas as <b>6 Políticas de SLA</b> (Admin → SLA and OLA Policies): as 34 subcategorias do
+          catálogo foram agrupadas em 5 políticas condicionadas por Sub-Category, por prazo de atendimento
+          compartilhado: "SR - 2 horas" (Reset de senha, MFA, Segurança), "SR - 4 horas" (Rede e Infraestrutura),
+          "SR - 1 dia" (Hardware, Acessos, Periféricos, Facilities), "SR - 2 dias" (Contas, M365, Software,
+          Equipamentos) e "SR - 3 dias" (Relatórios e Site Institucional), mais a "Default SLA Policy" atualizada
+          para uma tabela por Prioridade (Urgente 15min/4h, Alto 30min/8h, Médio 2h/24h, Baixo 4h/72h), usada para
+          Incidentes e como catch-all. Identificada e assumida a discrepância de "Gestão da plataforma de Service
+          Desk" (categoria sem subcategoria, não referenciável em "Sub-Category includes"); cai na SLA Default em
+          vez do prazo fixo de 2 dias do catálogo. Todas as 6 políticas conferidas campo a campo após salvas.</div>
+        </div>
+        <div class="changelog-item">
+          <time>09/09/2026</time>
+          <div>Configurada a <b>pesquisa de satisfação em duas etapas (CSAT)</b>: serviço e
+          solução, disparadas juntas na Resolução do ticket. Adaptada a pesquisa nativa "Default Employee
+          Satisfaction Survey IT" em vez de criar uma nova: pergunta existente (Q1) reescrita para "Como você avalia
+          o atendimento (cordialidade, agilidade e comunicação do agente)?", nova pergunta clonada (Q3) com o texto
+          "A solução apresentada resolveu o seu problema?", ambas Rating scale de 5 pontos com rótulos traduzidos
+          para PT-BR (Muito insatisfeito → Muito satisfeito). Trigger "Default Employee Satisfaction Trigger IT"
+          conferido sem alterações (dispara no Status mudando para Resolved, envia ao Requester por e-mail e
+          portal). Pesquisa salva e publicada; status Active confirmado.</div>
+        </div>
+        <div class="changelog-item">
+          <time>10/09/2026</time>
+          <div>Plataforma alterada para <b>português</b> em dois lugares distintos: (1) idioma
+          e fuso horário do agente/admin, ajustados não dentro do próprio FreshService (que só expõe Time
+          Format/Location/Signature em "Edit Profile"), mas no perfil unificado Freshworks
+          (myfreshworks.com/profile, link "Modify Personal Information"): Idioma = "Português" (opção única, sem
+          variante BR separada) e Fuso horário = "(GMT-03:00) Brasilia"; (2) idioma do <b>Portal de Autoatendimento</b>
+          (Admin → Portais → Vantris Holding → Definições do portal → Idioma do portal), esse sim com variante
+          "Portuguese (BR)" específica, selecionada e publicada.</div>
+        </div>
+        <div class="changelog-item">
+          <time>10/09/2026</time>
+          <div>Configurada a <b>Atribuição Automática de Tickets</b> (Admin → Workflow Automator): descoberto que nem
+          o Workflow Automator nem as Regras do Supervisor permitem condicionar por Subcategoria (só Categoria),
+          diferente do motor de SLA. Diante disso, decidiu-se simplificar: em vez de tentar repartir as 11
+          categorias entre N1/N2/N3/Segurança hoje, <b>todo ticket criado é atribuído automaticamente ao Grupo
+          N1</b>, deixando a triagem fina para um catálogo N2/N3 a ser planejado depois. Implementado adaptando o
+          fluxo de exemplo nativo "Category-Based Ticket Routing" (removidas as 3 ramificações por categoria
+          específica (Hardware/Software/Network), mantendo só a condição catch-all "qualquer categoria" →
+          atribuir a N1), renomeado para "Atribuição Automática - Triagem Inicial N1" e ativado. Ver detalhes
+          completos em <a href="#config-realizada">Registro de configuração real</a>.</div>
+        </div>
+        <div class="changelog-item">
+          <time>10/09/2026</time>
+          <div>Avaliada a possibilidade de cadastrar solicitantes VIP. Confirmado ao vivo na instância: em
+          <b>Admin → Solicitantes</b> já existe uma aba de filtro "VIP" nativa, e o perfil de cada solicitante
+          (botão Editar → seção Additional Information) tem uma caixa de marcar <b>"Marcar como VIP"</b>. Também
+          identificado, na lista de exemplos do Workflow Automator, o fluxo pronto (desativado) "Prioritize VIP
+          tickets", que sobe a prioridade automaticamente para tickets de solicitantes VIP. Decisão:
+          deixar para configurar isso futuramente, quando a plataforma já estiver em operação; anotado em
+          Próximos Passos, nenhuma alteração feita nos dados do solicitante de exemplo usado para a verificação.</div>
+        </div>
+        <div class="changelog-item">
+          <time>10/09/2026</time>
+          <div>Iniciada a configuração do <b>CMDB / Gestão de Ativos</b> (definida como próxima
+          prioridade). Ao explorar a instância real, identificado que o FreshService atual usa um módulo mais novo
+          chamado <b>ITAM (IT Asset Management)</b>, com uma estrutura diferente da que o plano original desta seção
+          previa: em vez de um único cadastro de "Tipos de Ativo", existem categorias separadas: <b>Dispositivos
+          (Devices)</b>, <b>Ativos Físicos (Physical Assets)</b>, Recursos e Redes. "Dispositivos" é voltado a
+          computadores enxergados via agente/rede (endereço IP, softwares instalados, login), enquanto "Ativos
+          Físicos" é um cadastro manual simples (como uma ficha), com tipos prontos para Mouse, Teclado, Monitor,
+          Celular e Câmera, mas <b>sem tipo pronto para Notebook</b>, que precisará ser criado como um tipo
+          personalizado. Avaliado se modelar Notebook como Ativo Físico simples (mesmo
+          caminho dos periféricos) ou como Dispositivo (caminho mais rico, mas que depende de um agente de
+          descoberta instalado); decisão ainda pendente.</div>
+        </div>
+        <div class="changelog-item">
+          <time>10/09/2026</time>
+          <div>Avaliado se o "agente" de descoberta de dispositivos (mencionado na explicação acima) já
+          está incluído no plano contratado. Pesquisado nas páginas públicas de preços da Freshworks
+          (freshworks.com/freshservice/pricing e .../freshservice/itam/pricing) e na página de assinatura da conta
+          (Admin → Planos e faturação): <b>sim, está incluído</b>. Todo plano Freshservice (inclusive o Enterprise em
+          avaliação da Vantris) já vem com o "pacote ITAM Growth" e 100 Asset Units (a unidade de licenciamento do
+          CMDB) inclusos sem custo adicional; a funcionalidade de <b>"Asset discovery"</b> (descoberta de ativos) faz
+          parte desse pacote Growth. Os 86 ativos do inventário atual consomem uma fração pequena dessas 100
+          unidades (cada notebook/desktop/celular conta 1 Asset Unit; periféricos sem IP contam apenas 1/25), então
+          não há custo extra previsto para o volume atual. Isso não foi encontrado nem no menu nem na busca do Admin
+          da própria instância (termos "discovery"/"probe" não retornaram resultado); a confirmação veio das
+          páginas oficiais de preços da Freshworks. Importante: estar incluído no plano é diferente de estar
+          configurado: usar o caminho "Dispositivos" ainda exigiria instalar e configurar o agente/probe de
+          descoberta na rede da Vantris, um passo à parte que ainda não foi iniciado.</div>
+        </div>
+        <div class="changelog-item">
+          <time>10/09/2026</time>
+          <div>Confirmado: modelar todos os tipos de ativo como <b>Ativo Físico</b> (Physical Asset), deixando
+          registrado que futuramente é possível instalar o agente de descoberta nos notebooks. Criado em
+          <b>Ativos → Inventário → Ativos Físicos → Adicionar Ativo → Tipo → + Add your first Asset type</b> o novo
+          tipo personalizado <b>"Notebook"</b>, com a opção <b>"Relação de Dispositivo Ativo" ligada</b> (permite, no
+          futuro, associar cada notebook cadastrado manualmente a um Dispositivo descoberto pelo agente, sem precisar
+          recadastrar) e a opção de localização <b>"Edifício" ligada</b> (Sala de Armazenamento/Servidores/Gaveta
+          deixadas desligadas, por não se aplicarem a notebooks de colaborador). Os demais tipos (Mouse, Headset,
+          Teclado→Keyboard, Monitor, Celular→Phone, CFTV→Camera) já existem prontos em Ativos Físicos e serão
+          reaproveitados sem alteração. Nenhum ativo real foi cadastrado ainda: só o tipo "Notebook" foi criado;
+          o cadastro/importação dos 86 ativos do export TOPdesk é o próximo passo. Detalhes completos em
+          <a href="#cmdb">CMDB / Gestão de Ativos</a>.</div>
+        </div>
+        <div class="changelog-item">
+          <time>10/09/2026</time>
+          <div>Cadastrado o <b>primeiro ativo real</b> do CMDB, ao vivo e passo a passo: o notebook
+          <b>ID 00001</b> do export TOPdesk (Dell Inspiron 15 3530, série 7LQ17F4, usado por Bianca Torres). Além dos
+          campos principais (Tipo, Estado, Fabricante), duas decisões novas foram tomadas e configuradas:
+          <b>Managed By Group = N1</b> (todos os ativos ficam vinculados ao mesmo grupo da triagem de tickets, por
+          decisão registrada), e criado o primeiro <b>Edifício "Escritório - São Paulo"</b> (Ativos → Campos
+          Personalizados → Edifício), pois os notebooks marcados como "Remoto" no TOPdesk ficarão sem Edifício preenchido,
+          por não haver um prédio físico associado. Também criado um novo <b>Campo Personalizado de Ativo "Termo
+          assinado"</b> (Admin → Campos Personalizados → Activo → tipo Sim/Não, filtrável), que é o documento que cada colaborador assina relacionando todos os ativos da empresa em sua posse;
+          esse campo aparece em todos os tipos de Ativo Físico, não só Notebook. Ativo salvo com sucesso
+          (id interno 13408); "Discovery Sources" do registro mostra "Guilherme Silva", confirmando que é um cadastro
+          manual (é esse mesmo campo que passaria a mostrar o agente de descoberta, se um dia for instalado).
+          <b>Pendência identificada:</b> o campo "Used By" não pôde ser preenchido com "Bianca Torres" porque as
+          pessoas reais da Vantris ainda não existem como Solicitantes no FreshService; isso trava esse campo para
+          todo o inventário até essa importação ser feita. Faltam 85 dos 86 ativos.</div>
+        </div>
+        <div class="changelog-item">
+          <time>10/09/2026</time>
+          <div>Avaliada a conexão do FreshService à base de usuários da Microsoft para
+          puxar todos automaticamente: <b>é possível, sim</b>. Confirmado ao vivo no Marketplace de apps da própria
+          conta (Admin → Aplicações): existe o app gratuito e verificado pela Freshworks <b>"Azure active directory
+          provisioning (SCIM)"</b> (4.3★, 7.300+ instalações), que cria/atualiza automaticamente os usuários no
+          FreshService a partir do Azure AD/Entra ID via protocolo SCIM; instalação vale para toda a conta.
+          Também existem "Microsoft Azure Entra (AD) Group Sync" (mais focado em Grupos de Agentes) e "Azure AD -
+          Orch" (orquestração via Workflows). Esse app SCIM é o caminho recomendado para resolver a pendência de
+          Solicitantes acima. Ainda falta: gerar a API key do FreshService (exige Org Administrator), configurar o
+          app enterprise correspondente no lado do Azure AD, e testar com um grupo pequeno de usuários antes de
+          sincronizar a base inteira; ver detalhes em <a href="#cmdb">CMDB / Gestão de Ativos</a>.</div>
+        </div>
+        <div class="changelog-item">
+          <time>10/09/2026</time>
+          <div>Cadastrados os <b>77 ativos restantes</b> do CMDB via importação em massa nativa do FreshService
+          (Ativos Físicos → Importar → Importar Ativos). Duas descobertas de formato corrigidas ao longo do
+          processo: (1) a coluna <span class="mono">manufacturer</span> exige um Fabricante já existente, resolvido
+          criando os 6 Fabricantes usados no export (Logitech, Lenovo, Dell, Apple, Samsung, Intelbras); (2) a coluna
+          <span class="mono">state</span> exige o valor interno em inglês (In Use / In Stock / Missing / etc.), não
+          o rótulo em PT-BR. Pipeline validado com um teste de 2 ativos (sucesso, depois apagados) antes do lote
+          real. Resultado do lote real: <b>Total 77, Criados 77, Falhas 0</b>, conferido por tipo na lista de Ativos.
+          CMDB soma hoje <b>78 Ativos</b> (77 + piloto). Ver detalhes completos, tabela de mapeamento TOPdesk →
+          FreshService e pendência do campo "Termo assinado" em <a href="#cmdb">CMDB / Gestão de Ativos</a>.</div>
+        </div>
+        <div class="changelog-item">
+          <time>10/09/2026</time>
+          <div>Pesquisada a forma mais segura de integrar o Azure AD ao FreshService antes de
+          instalar qualquer app: concluído que o app "Azure active directory provisioning (SCIM)" do Marketplace
+          (publisher effy) é muito provavelmente o mesmo conector oficial citado no tutorial da própria Microsoft
+          para Freshservice (endpoint scim.freshservice.com), com alternativas mapeadas (SAML+JIT; script
+          customizado via Graph API). Comparação registrada; app segue não instalado. Preparado um rascunho de e-mail com perguntas de due
+          diligence para o suporte da Freshworks, que havia entrado em contato sobre o andamento do teste; rascunho
+          ainda não enviado.</div>
+        </div>
+        <div class="changelog-item">
+          <time>10/09/2026</time>
+          <div>Levantado o estado de fábrica dos formulários de abertura de chamado (interno vs. portal) e das
+          configurações de acesso. Implementadas duas decisões: (1) <b>restrição de domínio</b>
+          para registro/criação de ticket em qualquer canal, limitada a <b>@vantrisholding.com.br</b> e
+          <b>@novapay.com.br</b> (Admin → Definições do service desk → Segurança); (2) <b>desativação do SSO do
+          Google</b> no método de login predefinido: descoberto que essa política é única para toda a conta
+          Freshworks (agentes + portal, não há política separada por portal), confirmado antes de
+          aplicar ("Nós não utilizamos o Google! Somente Microsoft"). A opção "Quem pode enviar tickets" do portal
+          foi mantida em "Todos" (não exigir login), por decisão deliberada já coberta pela restrição de domínio.
+          Detalhes campo a campo em <a href="#config-realizada">Registro de Configuração Realizada, Acesso e
+          Segurança</a>.</div>
+        </div>
+        <div class="changelog-item">
+          <time>15/09/2026</time>
+          <div>Migração do e-mail no Microsoft 365 de @vantrisholding.com.br para @novapay.com.br (empresa
+          movendo a marca/domínio principal para novapay), refletida também no login do FreshService.
+          Avaliado risco de lockout: nenhum pela restrição de domínio (ambos já permitidos), mitigado o risco de
+          notificação porque o alias @vantrisholding.com.br segue ativo. Alterado o e-mail do agente Guilherme Silva
+          via Admin → Agentes → Editar detalhes → Alterar e-mail, de guilherme.silva@vantrisholding.com.br para
+          <b>guilherme.silva@novapay.com.br</b>, confirmado antes de salvar o aviso do próprio Fresh
+          de que a sessão seria encerrada imediatamente e exigiria ativação via e-mail no novo endereço. Alteração
+          salva com sucesso, sessão encerrada como esperado; pendente a ativação da conta pelo e-mail de
+          ativação. Em seguida, iniciar a conexão de servicedesk@novapay.com.br (caixa compartilhada existente da
+          empresa) como caixa de e-mail do service desk; a ser retomado assim que o login for reativado. Detalhes
+          em <a href="#config-realizada">Registro de Configuração Realizada, Acesso e Segurança</a>.</div>
+        </div>
+        <div class="changelog-item">
+          <time>15/09/2026</time>
+          <div>Confirmada a ativação da conta pelo e-mail de ativação e o login concluído com
+          guilherme.silva@novapay.com.br. Em seguida, renomeação da conta do FreshService de
+          "Vantris Holding" para <b>"novapay"</b> também definida. Alterado em Admin → Conta → Nome da conta (ícone de editar →
+          modal "Editar nome da conta" → campo account_name → Guardar). Confirmado salvo e reconferido após
+          recarregar a página (campo normalizou "novapay" digitado para "NovaPay"). Identificado em seguida que o
+          e-mail de contato principal da conta (campo distinto do login do agente, usado para comunicações
+          administrativas/faturamento) ainda mostrava @vantrisholding.com.br, corrigido para
+          guilherme.silva@novapay.com.br em Admin → Conta → Detalhes do contacto, salvo com sucesso. Por fim, definida a necessidade de trocar também a URL/subdomínio da instância
+          (vantrisholding.freshservice.com) para algo com "novapay". Verificado que não há essa opção em autoatendimento nas Definições da Conta;
+          confirmado via artigo oficial do suporte Freshservice que essa troca exige abrir chamado com
+          support@freshservice.com, diferente do recurso de domínio personalizado do portal (que só troca a URL
+          do autoatendimento, não a URL de administração). Pendente: preparar e enviar esse pedido ao suporte,
+          mediante confirmação. Detalhes em <a href="#config-realizada">Registro de Configuração Realizada,
+          Acesso e Segurança</a>.</div>
+        </div>
+        <div class="changelog-item">
+          <time>15/09/2026</time>
+          <div>Tema da troca de URL/subdomínio pausado por ora; retomar quando necessário.</div>
+        </div>
+        <div class="changelog-item">
+          <time>17/09/2026</time>
+          <div>Guilherme teve uma reunião de demonstração do Freshservice com a <b>Prisma Consultoria</b> (empresa parceira da
+          Freshworks), conduzida por Rafael Costa, que cobriu portal do solicitante, dashboard e configurações do
+          agente, lista de tickets e operações em massa, estrutura de chamados, tarefas/ativos/aprovações/auditoria,
+          notas de resolução e uso por IA, licenciamento, Problemas/Mudanças/Liberações, monitoramento com geração
+          automática de incidentes (ex. Zabbix), descoberta e inventário de ativos, agente de IA multicanal, base
+          de conhecimento, automador de fluxos, analytics/relatórios e exportação de dados via API. Guilherme
+          avaliou a plataforma como mais completa do que imaginava. Principais pontos novos capturados no
+          documento: detalhes de licenciamento (licença Business x TI, aprovadores não precisam de licença, IA
+          gratuita hoje mas tokenizada a partir de janeiro, descoberta avançada de ativos cobrada à parte por
+          unidade; ver <a href="#planos">Planos &amp; licenciamento</a>); a integração nativa Desk→Service abre um
+          incidente no Service a partir de um chamado do Desk mantendo "correlação" entre os registros, mas não
+          ficou claro se mantém a mesma numeração; e uma preocupação de segurança do Guilherme sobre se a
+          integração com a Microsoft (usada pelo app SCIM) apenas provisiona ou também retém dados; a Prisma Consultoria vai
+          consultar a IFAI diretamente. A Prisma Consultoria também informou que a troca de subdomínio (vantrisholding para algo
+          com "novapay") é possível direto nas configurações da central de atendimento ou dos portais. Ações
+          combinadas na reunião: Guilherme vai continuar testando com usuários inseridos manualmente enquanto aguarda a resposta
+          sobre a Microsoft, e vai tentar a troca de subdomínio. Detalhes em <a href="#proximos-passos">Próximos
+          passos</a>.</div>
+        </div>
+        <div class="changelog-item">
+          <time>18/09/2026</time>
+          <div>Conectada a caixa de correio <b>servicedesk@novapay.com.br</b> como canal de e-mail do service desk
+          (Admin → Definições do e-mail e das caixas de correio → Adicionar caixa de correio), atribuindo os
+          tickets recebidos ao grupo N1. Conexão feita via Microsoft Outlook/OAuth (Autenticação da API do
+          Microsoft Graph), com o login Microsoft realizado manualmente (regra permanente do projeto:
+          credenciais/telas de login da Microsoft nunca são preenchidas automaticamente). O status "Associado" retornado para entrada e
+          saída confirma que a conta usada na autenticação (guilherme.silva@novapay.com.br) tem permissão delegada
+          sobre a caixa compartilhada. No meio do processo, uma navegação de verificação derrubou o formulário
+          ainda não salvo, exigindo refazer o preenchimento; na segunda tentativa a autenticação OAuth foi
+          reaproveitada automaticamente, sem exigir novo login. Salvamento final confirmado. Detalhes
+          campo a campo em <a href="#config-realizada">Registro de Configuração Realizada, Canais de e-mail</a>.</div>
+        </div>
+        <div class="changelog-item">
+          <time>18/09/2026</time>
+          <div>Continuada a configuração do Field Manager (Campos de tickets) além de Categoria: nos campos
+          predefinidos <b>Grupo, Agente, Departamento e Prioridade</b>, traduzidos os rótulos exibidos ao
+          solicitante no portal (Group/Assigned to/Department/Priority → Grupo/Atribuído a/Departamento/Prioridade)
+          e marcado <b>Grupo como obrigatório ao fechar o ticket</b>. Na seção condicional <b>"Incidente Grave"</b>
+          (4 campos personalizados, só aparecem quando o Tipo é Incidente Grave), traduzidos rótulos e opções
+          (Major incident type → Tipo de incidente grave, com Full/Partial outage e Performance degradation →
+          Interrupção total/parcial e Degradação de performance; Business impact → Impacto no negócio; Impacted
+          locations → Locais afetados; No. of customers impacted → Número de usuários impactados) e marcados os 4
+          como obrigatórios ao enviar o formulário. Todas as alterações confirmadas reabrindo cada campo após
+          recarregar a página. Detalhes em <a href="#config-realizada">Registro de Configuração Realizada</a>.</div>
+        </div>
+        <div class="changelog-item">
+          <time>18/09/2026</time>
+          <div>Configurado o recebimento de tickets da <b>Ouvidoria</b>: todo ticket aberto para
+          ouvidoria@novapay.com.br deve ser encaminhado ao grupo Ouvidoria. Sem acesso pessoal a
+          essa caixa (só uma conta de serviço, "service", tem), avaliados os dois caminhos
+          possíveis: encaminhamento simples (não exige acesso a caixa) versus conexão direta via OAuth (exige
+          Acesso Total permanente de quem autentica, já que o Freshservice reutiliza essa mesma conta continuamente
+          para sincronizar, não só no momento da configuração). Optou-se pela conexão direta usando a conta
+          "service". Criada a caixa <b>Ouvidoria novapay</b> (ouvidoria@novapay.com.br, grupo Ouvidoria) via Microsoft
+          Outlook/OAuth Graph API. No fluxo de login, o navegador reaproveitou automaticamente a sessão Microsoft já
+          ativa de Guilherme; ao tentar trocar de conta ("Usar outra conta") uma tela de login real da Microsoft
+          apareceu, e optou-se por prosseguir com a própria conta em vez de logar como "service", concluindo com o
+          clique em Adicionar. Registrada a ressalva de que o status "Associado" não garante Acesso Total real sobre a caixa;
+          pendente testar o recebimento de e-mail de fato.
+          Detalhes em <a href="#config-realizada">Registro de Configuração Realizada, Canais de e-mail</a>.</div>
+        </div>
+        <div class="changelog-item">
+          <time>18/09/2026</time>
+          <div>Confirmado <b>Acesso Total</b> sobre ouvidoria@novapay.com.br com a própria conta; teste de
+          recebimento de e-mail considerado desnecessário agora, e a ressalva anterior removida do registro de
+          configuração. Em seguida, foi feita uma tentativa de localizar o "Guia de
+          onboarding" nativo do FreshService (/a/onboarding, mencionado nos Próximos Passos). A URL redireciona para
+          o painel comum; não há atalho para o guia no painel, na busca do topo nem na busca do hub de Administrador
+          (/ws/2/admin/home). O recurso não foi encontrado nesta tentativa; optou-se por seguir para
+          outros tópicos da lista.</div>
+        </div>
+        <div class="changelog-item">
+          <time>18/09/2026</time>
+          <div>O próprio Guilherme encontrou e abriu o "Guia de onboarding" (provavelmente pelo botão "Configurar e
+          explorar" no topo da tela, não localizável por busca ou link direto). Revisado item a item: checklist
+          "Configuração rápida" com <b>Configurar e-mail</b> já marcado como concluído automaticamente pelo
+          Freshservice (reflete as caixas servicedesk@novapay.com.br e ouvidoria@novapay.com.br conectadas nesta sessão),
+          restando Configurar o portal de apoio, Convidar agentes e Personalizar portal do agente. Seção "Explore o
+          Freshservice" tem <b>Personalizar os campos do ticket</b> também já marcado como concluído (reflete o
+          trabalho no Field Manager desta sessão), e mais 5 grupos de itens não iniciados (Emissão de tickets,
+          Gestão de operações de TI, Gestão de mudanças, Gestão de projetos de TI, Áreas de trabalho). Detalhamento
+          completo em <a href="#config-realizada">Registro de Configuração Realizada, Guia de onboarding
+          nativo</a>.</div>
+        </div>
+        <div class="changelog-item">
+          <time>18/09/2026</time>
+          <div>Trocado o subdomínio da instância, em Portais → Vantris Holding → Definições do portal → Definições
+          gerais → ícone de lápis em "URL do portal". O nome exato "novapay" já estava em uso por outra conta
+          Freshservice, então o subdomínio ficou em <b>novapay-service.freshservice.com</b>. Testado e funcionando
+          tanto no painel de administração quanto no portal de suporte. Detalhamento completo em
+          <a href="#config-realizada">Registro de Configuração Realizada, Troca de subdomínio</a>.</div>
+        </div>
+        <div class="changelog-item">
+          <time>21/09/2026</time>
+          <div>Definido o modelo de suporte da plataforma, a pedido da Bianca Torres: começar com o suporte
+          oficial da Freshworks (chat 24/7, e-mail, página de status, consultoria de produto 1:1), sem contratar
+          parceiro adicional por enquanto. Fluxo de acionamento: Guilherme faz a primeira análise de qualquer
+          dúvida ou incidente da ferramenta, escalando ao suporte oficial da Freshworks quando não resolve
+          internamente. Um parceiro Freshworks (Prisma Consultoria ou outro) fica reservado como opção futura, para automações,
+          integrações ou customizações avançadas, com validação interna antes de qualquer acionamento. Detalhes em
+          <a href="#planos">Planos &amp; licenciamento, Modelo de suporte da plataforma</a>.</div>
+        </div>
+        <div class="changelog-item">
+          <time>22/09/2026</time>
+          <div>Configurado e testado com sucesso o login único (SSO) via SAML com o Microsoft Entra ID (Azure AD),
+          retomando a integração com a Microsoft que estava pausada. Ordem definida:
+          SSO primeiro, SCIM (provisionamento automático) depois. Criado o Enterprise Application "Freshworks |
+          Logon com base em SAML" no Entra ID e configurado o SSO na conta Freshworks (Segurança → Início de
+          sessão SSO → Azure AD utilizando SAML). Dois problemas encontrados e corrigidos durante o teste: (1)
+          identificador de entidade divergente entre a conta Freshworks e o FreshService específico — corrigido
+          adicionando um segundo identificador no Entra ID; (2) resposta SAML não assinada (Entra ID assina só a
+          Declaração por padrão) — corrigido alterando a opção de assinatura para "Assinar resposta e declaração".
+          Login testado com sucesso pelo fluxo iniciado no FreshService, com MFA da Microsoft. Login nativo
+          Freshworks continua ativo em paralelo. Detalhes completos em <a href="#config-realizada">Registro de
+          Configuração Realizada, Login via SSO com Microsoft Entra ID</a>. Instalação do app SCIM iniciada na
+          mesma sessão, mas pausada para priorizar o SSO; retomar em sessão futura (ver <a href="#proximos-passos">Próximos
+          passos</a>).</div>
+        </div>
+        <div class="changelog-item">
+          <time>23/09/2026</time>
+          <div>Finalizada a tradução e ajuste da <b>pesquisa de satisfação (CSAT)</b>: texto de introdução traduzido
+          e salvo ("Obrigado pelo seu tempo..."), removida a 3ª pergunta de texto livre para deixar a pesquisa com
+          exatamente as 2 perguntas pedidas (Serviço + Solução), localizados e traduzidos os canais E-mail e Portal
+          do acionador (Assunto, pré-cabeçalho, corpo e fechamento do e-mail; frase e botão do Portal), e traduzida
+          a página de agradecimento pós-envio. Guilherme completou pelo próprio ambiente: conversão da Pergunta 2
+          (Solução) de Rating scale para Sim/Não (usando o modal de conjunto de opções, já que o Tipo de uma
+          pergunta salva fica travado até ser clonada), adição da logo da NovaPay, aplicação das traduções de e-mail
+          e Portal, e a publicação final. Por fim, renomeados a <b>pesquisa</b> ("Default Employee Satisfaction
+          Survey IT" → "Pesquisa de Satisfação - TI") e o <b>acionador</b> ("Default Employee Satisfaction Trigger
+          IT" → "Avalie a sua experiência com este chamado."). Detalhes completos em <a href="#csat">Pesquisa de
+          Satisfação (CSAT)</a>.</div>
+        </div>
+        <div class="changelog-item">
+          <time>24/09/2026</time>
+          <div>Revisada a outra pesquisa nativa da conta, <b>"Default NPS Survey (IT)"</b>
+          (Net Promoter Score, separada da CSAT): pergunta única sobre lealdade geral, acionador do tipo Agendado
+          (não por evento), canal só E-mail, e <b>já vem desativado por padrão</b> — hoje não envia nada a ninguém.
+          Decisão: manter desativada, sem tradução ou configuração adicional por ora. Também sinalizado
+          que o <b>prazo do trial (14 dias a partir de 09/09) já venceu em 23/09/2026</b> sem confirmação registrada
+          da decisão de plano Pro x Enterprise; recomendado checar o status da conta antes que módulos configurados
+          (Change/Problem Management) fiquem indisponíveis. Ver <a href="#planos">Planos &amp; licenciamento</a> e
+          <a href="#proximos-passos">Próximos passos</a>.</div>
+        </div>
+        <div class="changelog-item">
+          <time>24/09/2026</time>
+          <div>Prazo do trial estendido até <b>29/09/2026</b> (venceria em 23/09/2026). Atualizado o aviso em
+          <a href="#planos">Planos &amp; licenciamento</a> e o item correspondente em <a href="#proximos-passos">Próximos
+          passos</a>; decisão de plano (Pro x Enterprise) segue pendente, agora com prazo até 29/09/2026.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+(function(){
+  var root = document.documentElement;
+  var btn = document.getElementById('themeToggle');
+  if(!btn) return;
+  var icon = btn.querySelector('.theme-toggle-icon');
+  var label = btn.querySelector('.theme-toggle-label');
+  function systemPrefersDark(){
+    try { return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; }
+    catch(e){ return false; }
+  }
+  function applyTheme(theme){
+    if(theme === 'light' || theme === 'dark'){
+      root.setAttribute('data-theme', theme);
+    } else {
+      root.removeAttribute('data-theme');
+    }
+    var isDark = theme ? theme === 'dark' : systemPrefersDark();
+    icon.textContent = isDark ? '☀' : '🌙';
+    label.textContent = isDark ? 'Modo claro' : 'Modo escuro';
+  }
+  var saved = null;
+  try { saved = localStorage.getItem('itsm-theme'); } catch(e){}
+  applyTheme(saved);
+  btn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme');
+    var isDark = current ? current === 'dark' : systemPrefersDark();
+    var next = isDark ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem('itsm-theme', next); } catch(e){}
+  });
+})();
+</script>
+
+</body></html>
