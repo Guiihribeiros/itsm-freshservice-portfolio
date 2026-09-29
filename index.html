@@ -611,12 +611,22 @@
         para garantir a integridade da associação categoria↔subcategoria.
       </p>
       <div class="config-card">
-        <header><h4>11 categorias / 34 subcategorias, que espelham o Catálogo de Serviços</h4><span class="path">configurado em 09/09/2026</span></header>
+        <header><h4>11 categorias / 34 subcategorias, que espelham o Catálogo de Serviços</h4><span class="path">configurado em 09/09/2026 · catálogo expandido em 29/09/2026 (ver card abaixo)</span></header>
         <div class="field-grid">
           <div class="f-row"><div class="f-label">Nível 1 (Categoria)</div><div class="f-value">Contas e Acessos · Microsoft 365 e Colaboração · Equipamentos e Hardware · Periféricos e Impressão · Rede e Infraestrutura · Software e Licenciamento · Segurança da Informação · Suporte Geral de TI · Administrativo e Facilities · Fora de Escopo · Gestão da plataforma de Service Desk (11 categorias, mesmos nomes e ordem do <a href="#catalogo">Catálogo de Serviços</a>).</div></div>
           <div class="f-row"><div class="f-label">Nível 2 (Subcategoria)</div><div class="f-value">34 subcategorias no total, idênticas às linhas do catálogo (8 + 6 + 5 + 2 + 2 + 3 + 2 + 3 + 3 = 34). "Fora de Escopo" e "Gestão da plataforma de Service Desk" ficaram sem subcategoria (decisão confirmada em 09/09): categoria própria de Nível 1, sem filho de Nível 2.</div></div>
           <div class="f-row"><div class="f-label">Categorias antigas do template</div><div class="f-value">As 23 categorias de exemplo da conta trial (Hardware, Software, Network, Other, Office Applications, Office Furniture, Office Equipment, Employee Benefits, Employee Records and Documents, Employee Onboarding/Offboarding, Talent Management, Employee Relations, Workplace Access and Security, Travel, Building and Grounds Maintenance, Legal Document Creation, Legal Review - Vendor Documents, Legal Review - Customer Documents, Vendor Document Review, Payroll, Vendor Payment, Customer Payment, Reimbursements and Advances) foram excluídas. Confirmado após o Salvar, reabrindo "Manage Category": restaram só as 11 novas.</div></div>
           <div class="f-row"><div class="f-label">Verificação</div><div class="f-value">As 9 categorias com subcategoria foram conferidas uma a uma no modo "Pré-visualização" (o dropdown dependente real, como o usuário final vê) antes de excluir as categorias antigas; todas bateram exatamente com o catálogo, na ordem certa.</div></div>
+        </div>
+      </div>
+      <div class="config-card">
+        <header><h4>Expansão do catálogo: 10 categorias N2 (infraestrutura/plataforma)</h4><span class="path">adicionadas em 29/09/2026, no mesmo campo "Category"</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Motivo</div><div class="f-value">Suportar o roteamento automático para o grupo N2 (ver <a href="#config-realizada">Atribuição Automática - Roteamento Grupo N2</a>): antes da expansão, o campo Categoria só tinha as 11 categorias de suporte N1.</div></div>
+          <div class="f-row"><div class="f-label">Nível 1 (10 novas categorias)</div><div class="f-value">Plataforma Kubernetes e Ingress · Mensageria e Processamento Assíncrono · Banco de Dados e Persistência · Rede, DNS e Entrega de Conteúdo · Onboarding · CI/CD e Aplicações · Segredos e Configuração · Observabilidade · Acessos e Identidade - Infraestrutura Cloud · Novos Serviços / Outros</div></div>
+          <div class="f-row"><div class="f-label">Nível 2 (50 novas subcategorias)</div><div class="f-value">Plataforma Kubernetes e Ingress (12): Kong - Configuração/Lentidão/Indisponibilidade, Keycloak - Configuração/Lentidão/Indisponibilidade, EKS - Configuração/Indisponibilidade, ArgoCD - Permissão de acesso/Configuração, Ambiente - Configuração/Indisponibilidade · Mensageria e Processamento Assíncrono (6): Temporal - Configuração/Lentidão/Indisponibilidade, Pulsar - Configuração/Lentidão/Indisponibilidade · Banco de Dados e Persistência (8): DB - Criação/Configuração/Lentidão/Indisponibilidade, Backup - Nova rotina/Restauração, TigerBeetle - Lentidão/Indisponibilidade · Rede, DNS e Entrega de Conteúdo (3): DNS - Configuração, Certificado (app/LB/CDN) - Configuração, CDN - Configuração · Onboarding (1): Onboarding de parceiro - mTLS / whitelist de IP · CI/CD e Aplicações (12): CI/CD - Configuração de pipeline/Correção de pipeline/Suporte a build de imagens, Runner - Suporte/Lentidão/Indisponibilidade, App - Deploy/Configuração inicial/Suporte geral/Lentidão/Indisponibilidade/Transação-pagamento com falha ou pendência · Segredos e Configuração (2): Secret - Criação/Alteração · Observabilidade (1): Observabilidade - Configuração · Acessos e Identidade - Infraestrutura Cloud (3): VPN - Permissão de acesso/Revogação de acesso/Suporte geral · Novos Serviços / Outros (2): Novo serviço - Criação, Outros - Não categorizadas</div></div>
+          <div class="f-row"><div class="f-label">Verificação</div><div class="f-value">Conferidas uma a uma diretamente nos dropdowns de Categoria/Subcategoria do construtor de condições da automação N2 (10 condições, uma por categoria), não pelo modo "Pré-visualização" do Manage Category.</div></div>
+          <div class="f-row"><div class="f-label">Total atualizado do campo Categoria</div><div class="f-value"><b>21 categorias / 84 subcategorias</b> (34 originais de N1 + 50 novas de N2), no mesmo campo compartilhado "Category" descrito acima.</div></div>
         </div>
       </div>
       <p class="section-sub" style="margin-top:10px;">
@@ -656,6 +666,41 @@
       <p class="section-sub" style="margin-top:10px;">
         Confirmado após recarregar a página "Campos de tickets" e reabrir cada campo individualmente: todos os
         rótulos, opções e marcações de obrigatoriedade acima bateram com o que foi salvo.
+      </p>
+
+      <h3 style="font-size:15px; margin:26px 0 10px;">Campo condicional: Classificação BACEN (Ouvidoria) <span class="tag">Field Manager → Campos de tickets · Regras de negócio para formulários → Tickets</span></h3>
+      <p class="section-sub">
+        Requisito: chamados do grupo <b>Ouvidoria</b> precisam de uma classificação de desfecho com um conjunto
+        fixo de valores. Avaliados os dois mecanismos de formulário condicional do Freshservice antes de
+        implementar: "Dynamic Sections" só reage a campos dropdown personalizados (não ao campo Grupo), enquanto
+        "Regras de negócio para formulários" aceita Grupo como condição e pode mostrar/ocultar e tornar
+        obrigatório um campo. Implementado com um campo novo + uma Regra de negócio.
+      </p>
+      <div class="config-card">
+        <header><h4>Campo de ticket "Classificação BACEN"</h4><span class="path">criado em 28/09/2026</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Tipo</div><div class="f-value">Menu suspenso (dropdown), "Menu suspenso personalizado"</div></div>
+          <div class="f-row"><div class="f-label">Posição no formulário</div><div class="f-value">Nível superior do formulário de ticket, junto a Departamento/Descrição/Categoria/Data de início prevista (fora de qualquer seção condicional já existente, como a de Incidente Grave)</div></div>
+          <div class="f-row"><div class="f-label">Opções (nesta ordem)</div><div class="f-value">Em análise · Improcedente · Procedente - Descumprimento de prazos · Procedente - Erro Administrativo · Procedente - Falha comprovada · Procedente - Workaround/Não Solucionada · Não Aplicável</div></div>
+          <div class="f-row"><div class="f-label">Visibilidade ao solicitante</div><div class="f-value"><b>Oculto</b> ("Visível para o solicitante" desmarcado): classificação de uso interno, preenchida pelo operador, não pelo solicitante</div></div>
+          <div class="f-row"><div class="f-label">Obrigatoriedade no próprio campo</div><div class="f-value">Nenhuma marcada diretamente ("Obrigatório ao enviar"/"Obrigatório ao fechar" desligados no campo): a obrigatoriedade é aplicada só condicionalmente, pela Regra de negócio abaixo, não em todo ticket</div></div>
+        </div>
+      </div>
+      <div class="config-card">
+        <header><h4>Regra de negócio "Classificação BACEN - obrigatória para chamados da Ouvidoria"</h4><span class="path">criada em 28/09/2026 · Admin → Regras de negócio para formulários → Tickets</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Aplica-se a</div><div class="f-value">Agentes</div></div>
+          <div class="f-row"><div class="f-label">Executar em</div><div class="f-value"><b>Novo formulário e Editar formulário</b> (cobre a criação do ticket e uma mudança de Grupo posterior, por exemplo se um agente reatribui o ticket à Ouvidoria depois de aberto)</div></div>
+          <div class="f-row"><div class="f-label">Condição (corresponder a TODAS)</div><div class="f-value">Ticket (formulário).Grupo <i>está</i> Ouvidoria</div></div>
+          <div class="f-row"><div class="f-label">Ações</div><div class="f-value">Mostrar → Classificação BACEN · Tornar obrigatório → Classificação BACEN</div></div>
+          <div class="f-row"><div class="f-label">Reverter automaticamente se falso</div><div class="f-value">Ligado (padrão): se o Grupo for alterado para outro diferente de Ouvidoria, o campo volta a ficar oculto e não obrigatório</div></div>
+          <div class="f-row"><div class="f-label">Aplicar a todo o sistema</div><div class="f-value">Desligado: regra vale para o formulário de ticket usado por agentes, não estendida a ações em massa/automações/API</div></div>
+          <div class="f-row"><div class="f-label">Status</div><div class="f-value"><b>Ativa</b></div></div>
+        </div>
+      </div>
+      <p class="section-sub" style="margin-top:10px;">
+        Efeito prático: o campo "Classificação BACEN" só aparece e só é exigido para preenchimento em chamados
+        atribuídos ao grupo Ouvidoria; em qualquer outro grupo permanece oculto e não obrigatório.
       </p>
 
       <h3 style="font-size:15px; margin:26px 0 10px;">Matriz de Prioridade <span class="tag">Admin → Service Management → Service Desk Settings → Priority Matrix</span></h3>
@@ -811,7 +856,20 @@
           <div class="f-row"><div class="f-label">Ação</div><div class="f-value">Atribuir a grupo → <b>N1</b> (renomeada de "Assign to Service Desk Monitoring Team" para "Atribuir ao Grupo N1")</div></div>
           <div class="f-row"><div class="f-label">Título e descrição do fluxo</div><div class="f-value">Renomeado de "Category-Based Ticket Routing" para <b>"Atribuição Automática - Triagem Inicial N1"</b>, com descrição explicando o motivo (limitação de Subcategoria) e o plano de catálogo N2/N3 futuro.</div></div>
           <div class="f-row"><div class="f-label">Status</div><div class="f-value"><b>Ativado</b> em 10/09/2026 por Guilherme Silva. Aviso do FreshService ao ativar: o fluxo só vale para tickets <i>novos</i> a partir da publicação; tickets já existentes continuam como estavam.</div></div>
-          <div class="f-row"><div class="f-label">Escopo desta regra</div><div class="f-value f-empty">Cobre as 11 categorias do catálogo por igual, incluindo os casos que haviam gerado dúvida (Segurança da Informação, Rede e Infraestrutura, Fora de Escopo, Gestão da plataforma de Service Desk); todas caem em N1 por enquanto, sem exceção, seguindo a decisão de simplificar hoje e tratar o roteamento fino depois, no catálogo N2/N3.</div></div>
+          <div class="f-row"><div class="f-label">Escopo desta regra</div><div class="f-value f-empty">Cobre as 11 categorias do catálogo por igual, incluindo os casos que haviam gerado dúvida (Segurança da Informação, Rede e Infraestrutura, Fora de Escopo, Gestão da plataforma de Service Desk); serve como piso inicial (catch-all) para todo ticket criado. <b>Atualização de 29/09/2026:</b> uma segunda automação (ver card abaixo) roda em sequência logo depois desta e sobrescreve o Grupo apenas para as categorias específicas de N2, mantendo N1 como destino de todo o restante.</div></div>
+        </div>
+      </div>
+
+      <div class="config-card">
+        <header><h4>Atribuição Automática - Roteamento Grupo N2</h4><span class="path">criado em 29/09/2026, clonado de uma automação existente com a mesma estrutura Evento → Condição → Ação</span></header>
+        <div class="field-grid">
+          <div class="f-row"><div class="f-label">Objetivo</div><div class="f-value">Sobrescrever o Grupo, só para as categorias que já são claramente N2 dentro do catálogo, do padrão N1 (triagem inicial, ver card acima) para o grupo <b>N2</b>.</div></div>
+          <div class="f-row"><div class="f-label">Origem</div><div class="f-value">Clonado (menu "⋮" → Clonar) a partir de uma automação com a estrutura de nós Evento → Condição → Ação já pronta, e só os valores internos (categorias da condição, grupo da ação) foram ajustados — sem criar nós novos do zero.</div></div>
+          <div class="f-row"><div class="f-label">Gatilho (Trigger)</div><div class="f-value">Ticket is created, igual à automação de N1</div></div>
+          <div class="f-row"><div class="f-label">Condição</div><div class="f-value">Campos de tickets.Categoria <i>é</i> (correspondência "qualquer", OR) uma das 10 categorias N2 do catálogo: Plataforma Kubernetes e Ingress, Mensageria e Processamento Assíncrono, Banco de Dados e Persistência, Rede, DNS e Entrega de Conteúdo, Onboarding, CI/CD e Aplicações, Segredos e Configuração, Observabilidade, Acessos e Identidade - Infraestrutura Cloud, Novos Serviços / Outros (conferido linha a linha no construtor de condições)</div></div>
+          <div class="f-row"><div class="f-label">Ação</div><div class="f-value">Atribuir a grupo → <b>N2</b> (grupos disponíveis na conta: Nenhum, N1, N2, N3, Ouvidoria, Segurança)</div></div>
+          <div class="f-row"><div class="f-label">Ordem de execução</div><div class="f-value">Posicionada logo <b>depois</b> de "Atribuição Automática - Triagem Inicial N1" na lista de automações baseadas em eventos. O Workflow Automator roda todas as automações que casam com o mesmo evento em ordem de lista, e a escrita mais recente vence; por isso esta automação sobrescreve o Grupo só para os tickets que casam com as categorias N2 acima, sem afetar os demais (que permanecem em N1).</div></div>
+          <div class="f-row"><div class="f-label">Status</div><div class="f-value"><b>Ativado</b> em 29/09/2026 por Guilherme Silva; ordem de execução (N1 antes, N2 depois) conferida na tela de reordenação e já correta, sem necessidade de mover manualmente.</div></div>
         </div>
       </div>
 
@@ -2037,6 +2095,36 @@
           <div>Prazo do trial estendido até <b>29/09/2026</b> (venceria em 23/09/2026). Atualizado o aviso em
           <a href="#planos">Planos &amp; licenciamento</a> e o item correspondente em <a href="#proximos-passos">Próximos
           passos</a>; decisão de plano (Pro x Enterprise) segue pendente, agora com prazo até 29/09/2026.</div>
+        </div>
+        <div class="changelog-item">
+          <time>28/09/2026</time>
+          <div>Criado o campo condicional <b>Classificação BACEN</b>, exigido para chamados do grupo
+          <b>Ouvidoria</b>: campo de ticket tipo Menu suspenso (7 opções fixas), oculto do solicitante, e uma nova
+          <b>Regra de negócio</b> ("Classificação BACEN - obrigatória para chamados da Ouvidoria") que mostra e
+          torna obrigatório esse campo apenas quando Grupo = Ouvidoria, com reversão automática se o grupo mudar
+          depois. Confirmado que "Dynamic Sections" não serve para esse caso (só reage a campos dropdown, não a
+          Grupo), ao contrário das Regras de negócio para formulários, que aceitam Grupo como condição. Detalhes
+          completos em <a href="#config-realizada">Registro de Configuração Realizada, Campo condicional:
+          Classificação BACEN</a>.</div>
+        </div>
+        <div class="changelog-item">
+          <time>29/09/2026</time>
+          <div>Expandido o campo de ticket <b>Categoria</b> com <b>10 novas categorias de N2</b>
+          (infraestrutura/plataforma: Kubernetes, Mensageria, Banco de Dados, Rede/DNS/CDN, Onboarding, CI/CD e
+          Aplicações, Segredos, Observabilidade, Acessos/Identidade Cloud, Novos Serviços) e suas <b>50
+          subcategorias</b>, no mesmo campo compartilhado já usado por N1. Catálogo total passa de 11/34 para
+          <b>21 categorias / 84 subcategorias</b>. Pré-requisito para a automação de roteamento N2 abaixo. Detalhes
+          completos em <a href="#config-realizada">Registro de Configuração Realizada, Categoria /
+          Subcategoria</a>.</div>
+        </div>
+        <div class="changelog-item">
+          <time>29/09/2026</time>
+          <div>Criada a automação <b>"Atribuição Automática - Roteamento Grupo N2"</b>: tickets cuja Categoria
+          seja uma das categorias específicas de N2 do catálogo são atribuídos automaticamente ao <b>Grupo N2</b>,
+          sobrescrevendo o padrão N1 da triagem inicial. Roda em sequência logo após a automação de N1, na ordem
+          correta (N1 primeiro, N2 depois), sem necessidade de reordenação manual. Detalhes completos em
+          <a href="#config-realizada">Registro de Configuração Realizada, Atribuição Automática - Roteamento Grupo
+          N2</a>.</div>
         </div>
       </div>
     </section>
